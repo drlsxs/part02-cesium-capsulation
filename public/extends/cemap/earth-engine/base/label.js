@@ -39,7 +39,7 @@ var Label = (function () {
         let label = {
             id,text,fillColor,font,outlineColor,outlineWidth,position, scale,
             horizontalOrigin : Cesium.HorizontalOrigin.CENTER,
-            verticalOrigin : Cesium.VerticalOrigin.CENTER
+            verticalOrigin : Cesium.VerticalOrigin.CENTER,
         }
         // 判断文本处于图片位置
         let pixelOffset = new Cesium.Cartesian2(0, 0)

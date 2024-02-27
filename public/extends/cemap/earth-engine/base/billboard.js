@@ -30,9 +30,9 @@ var Billboard = /**class*/(function (_super) {
             position: _position,
             scale: _scale,
             rotation: _rotation,
-            horizontalOrigin : Cesium.HorizontalOrigin.CENTER,
-            verticalOrigin : Cesium.VerticalOrigin.CENTER,
-            heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
+            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+            verticalOrigin: Cesium.VerticalOrigin.CENTER,
+            heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
         }
         b = Object.assign(b, _advanceParams)
         b = this.billboards.add(b)

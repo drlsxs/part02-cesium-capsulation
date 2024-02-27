@@ -1,9 +1,11 @@
 <script setup>
 import { cameraFlyTo, This, useEarth } from "@p/extends/cemap/useEarth/useEarth.js";
 import plane2 from "@p/models/plane2.png"
-import { addBillboard } from '@p/extends/cemap/useDraw/useBillboard.js'
 import { addSimple, removeSimple } from '@p/extends/cemap/useDraw/useSimple.js'
 import { removeLabel } from '@p/extends/cemap/useDraw/useLabel.js'
+import Layer from '@p/extends/cemap/earth-engine/layer/layer.js'
+import Label from '@p/extends/cemap/earth-engine/base/label.js'
+import Terrain from '@p/extends/cemap/earth-engine/layer/terrain.js'
 // 画普通点
 const handlefly = () => {
   // cameraFlyTo({
@@ -26,8 +28,6 @@ const drawSimple = () => {
     position: Cesium.Cartesian3.fromDegrees(120, 30),
     font:"16px"
   })
-  console.log(a)
-
 }
 
 function remove() {
@@ -47,6 +47,18 @@ function retext() {
   removeLabel("222")
 }
 
+function reAllLayer() {
+  let layer = new Layer(useEarth())
+  layer.removeAll()
+  layer.addTdtImgImgLayer()
+
+
+}
+
+function addTerrain() {
+  let terrain = new Terrain(useEarth())
+  terrain.addTerrainFromUrl(Cesium.IonResource.fromAssetId(3956))
+}
 
 
 </script>
@@ -59,6 +71,8 @@ function retext() {
     <button @click="remove">移除点</button>
     <button @click="addtext">文本</button>
     <button @click="retext">移除文本</button>
+    <button @click="reAllLayer">去掉所有图层</button>
+    <button @click="addTerrain">添加地形</button>
 
   </div>
 </template>

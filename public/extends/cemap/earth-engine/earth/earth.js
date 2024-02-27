@@ -65,7 +65,7 @@ var Earth = (function () {
         var creditContainer = document.createElement('div');
         this.viewer = new Viewer(this.options?.el || "cesiumContainer", {
             // 隐藏和禁用各种默认控件和组件
-            animation: true, // 动画控制器
+            animation: false, // 动画控制器
             baseLayerPicker: false, // 底图选择器
             fullscreenButton: false, // 全屏按钮
             geocoder: false, // 地址搜索框
@@ -73,7 +73,7 @@ var Earth = (function () {
             infoBox: false, // 信息框（鼠标悬停提示信息）
             sceneModePicker: false, // 场景模式选择器（2D/3D/Columbus View）
             selectionIndicator: false, // 选中对象指示器
-            timeline: true, // 时间线控制条
+            timeline: false, // 时间线控制条
             navigationHelpButton: false, // 导航帮助按钮
             navigationInstructionsInitiallyVisible: false, // 不显示导航说明
             // 确保相机视角为纯地球视角，不包含其他元素
@@ -81,9 +81,7 @@ var Earth = (function () {
             // 移除Cesium Ion logo
             creditContainer: creditContainer,
             shouldAnimate: true,
-            terrainProvider: new Cesium.EllipsoidTerrainProvider({
-                ellipsoid: Cesium.Ellipsoid.WGS84,
-            })
+            // terrain: Cesium.Terrain.fromWorldTerrain(),
         })
         this.scene = this.viewer.scene;
     };

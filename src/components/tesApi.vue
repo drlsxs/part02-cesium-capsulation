@@ -6,6 +6,8 @@ import {useEarth} from "@p/extends/cemap/useEarth/useEarth.js";
 let earth;
 onMounted(() => {
   earth = useEarth()
+
+
 });
 
 
