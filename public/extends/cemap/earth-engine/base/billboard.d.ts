@@ -1,5 +1,6 @@
 import {BillboardCollection} from "cesium";
 export class Billboard {
+
     billboards: BillboardCollection;
 
     add({id,color,image}: {
