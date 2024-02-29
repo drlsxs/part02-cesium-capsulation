@@ -1,6 +1,6 @@
 <script setup>
 import {cameraFlyTo, useEarth} from "@p/extends/cemap/useEarth/useEarth.js";
-import { addPoint } from '@p/extends/cemap/useDraw/useDraw.js'
+import { addPoint, removePoint } from '@p/extends/cemap/useDraw/useDraw.js'
 import wx from "@p/models/wx.png"
 
 
@@ -17,8 +17,16 @@ const handlefly = () => {
 // 画普通点
 const drawSimple = () => {
   addPoint({
-
+    id: "111",
+    color: Cesium.Color.RED,
+    image: wx,
+    scale: 0.1,
+    position: Cesium.Cartesian3.fromDegrees(120, 30),
   })
+}
+
+function remove() {
+  removePoint("111")
 }
 
 
@@ -31,6 +39,7 @@ const drawSimple = () => {
     <h1>Panel 1</h1>
     <button @click="handlefly">相机飞行</button>
     <button @click="drawSimple">普通点</button>
+    <button @click="remove">移除</button>
   </div>
 </template>
 

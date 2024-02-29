@@ -4,20 +4,21 @@ let billboard
 
 function useBillboard(earth) {
     billboard = new Billboard(earth)
-    billboard.add({
-
-    })
 }
 
 
 
 
 function addPoint(data) {
-    billboard.add()
+    billboard.addBillboard(data)
 }
 
+function removePoint(id) {
+    billboard.remove(id)
+}
 
 export {
     addPoint,
-    useBillboard
+    useBillboard,
+    removePoint
 }
