@@ -6,43 +6,68 @@
  * @license IMT
  */
 import {setThisEarth} from "@p/extends/cemap/useEarth/useEarth.js";
+import { initAllUtils } from '@p/extends/cemap/earth-engine/initUtils/initUtilsIndex.js'
 
-const {Viewer} = window.Cesium;
+const {Viewer,Scene} = window.Cesium;
 
 
 var Earth = (function () {
 
-    // 添加一个静态的地球实例缓存
-    var earthInstance = {};
-
     /**
      * 地球构造器，初始化
      * @constructor
-     * @param option {Object} 初始化参数
+     * @param id{String} id
+     * @param options{Object} 参数
      */
     function Earth(id, options) {
         // 视图
+        /**
+         *
+         * @type {Viewer}
+         */
         this.viewer = null;
-        this.id = id;
+        /**
+         *
+         * @type {Scene}
+         */
+        this.scene = null;
+        /**
+         *
+         * @type {string | number}
+         */
+        this.id = id ? id : "default";
+        /**
+         *
+         * @type {Object}
+         */
         this.options = options;
         // 初始化地图
-        this.initEarth(options);
+        initEarth.call(this);
         // 将地球实例缓存
-        earthInstance[this.id] = this;
-
-
+        Earth.instances[this.id] = this;
+        // 配置属性
+        configureProperties.call(this);
+        // 初始化全部各类工具
+        initAllUtils(this)
     }
 
+    Earth.instances = {};
 
-    /**
-     * 初始化地球
-     * @param option {Object} 初始化参数
-     */
-    Earth.prototype.initEarth = function (option) {
+
+    function configureProperties() {
+        Object.defineProperties(this, {
+            id: {
+                configurable: false,
+                writable: false,
+            },
+        });
+    }
+
+    function initEarth() {
         var creditContainer = document.createElement('div');
-        this.viewer = new Viewer(option?.el || "cesiumContainer", {
+        this.viewer = new Viewer(this.options?.el || "cesiumContainer", {
             // 隐藏和禁用各种默认控件和组件
-            animation: false, // 动画控制器
+            animation: true, // 动画控制器
             baseLayerPicker: false, // 底图选择器
             fullscreenButton: false, // 全屏按钮
             geocoder: false, // 地址搜索框
@@ -50,14 +75,16 @@ var Earth = (function () {
             infoBox: false, // 信息框（鼠标悬停提示信息）
             sceneModePicker: false, // 场景模式选择器（2D/3D/Columbus View）
             selectionIndicator: false, // 选中对象指示器
-            timeline: false, // 时间线控制条
+            timeline: true, // 时间线控制条
             navigationHelpButton: false, // 导航帮助按钮
             navigationInstructionsInitiallyVisible: false, // 不显示导航说明
             // 确保相机视角为纯地球视角，不包含其他元素
             automaticallyTrackDataSourceClocks: false,
             // 移除Cesium Ion logo
-            creditContainer: creditContainer
+            creditContainer: creditContainer,
+            shouldAnimate: true,
         })
+        this.scene = this.viewer.scene;
     };
 
     /**
@@ -66,7 +93,7 @@ var Earth = (function () {
      * @returns {*} 返回地球实例
      */
     Earth.getInstance = function (Id) {
-        return earthInstance[Id];
+        return Earth.instances[Id || "default"];
     }
 
     Earth.setInstance = function (Id) {
@@ -76,6 +103,10 @@ var Earth = (function () {
         }
     }
 
+
+
+
+    window.Earth = Earth;
     return Earth;
 
 

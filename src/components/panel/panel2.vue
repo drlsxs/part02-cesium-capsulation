@@ -4,8 +4,7 @@ import Earth from "@p/extends/cemap/earth-engine/earth/earth.js";
 
 
 // 画普通点
-const handlefly = () => {
-  Earth.setInstance("id2");
+function handlefly() {
   cameraFlyTo({
     longitude: 116.39,
     latitude: 39.9,

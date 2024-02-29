@@ -1,5 +1,4 @@
 import Earth from "@p/extends/cemap/earth-engine/earth/earth.js";
-
 let earth;
 
 /**
@@ -9,9 +8,14 @@ let earth;
  * @param option {Object} 初始化参数
  */
 function useEarth(id, option) {
+    earth = Earth.getInstance(id);
+    if (earth) return earth;
     earth = new Earth(id, option);
     return earth;
 }
+
+
+
 
 
 /**
@@ -26,6 +30,7 @@ function setThisEarth(earthInstance) {
 /**
  * 相机飞行
  * @param option {Object} 飞行参数
+ *
  */
 function cameraFlyTo(option) {
 
@@ -56,5 +61,5 @@ function cameraFlyTo(option) {
 export {
     useEarth,
     cameraFlyTo,
-    setThisEarth
+    setThisEarth,
 };

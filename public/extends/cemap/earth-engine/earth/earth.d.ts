@@ -1,6 +1,19 @@
-export default class Earth {
-    // 视图
-    protected viewer: null;
+import {Scene, Viewer} from "cesium";
+declare namespace earth {
 
-    protected initEarth(option): void
+    /**
+     * test
+     */
+    const test1: string;
+
+    class Earth {
+        viewer: Viewer;
+        scene: Scene;
+        id: string | number;
+        // 参数
+        options: Object;
+    }
+
+
+
 }
