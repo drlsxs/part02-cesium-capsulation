@@ -2,7 +2,6 @@ import Label from '@p/extends/cemap/earth-engine/base/label.js'
 import { This } from '@p/extends/cemap/useEarth/useEarth.js'
 
 function addLabel(data) {
-    debugger
     This(UseLabel, this).labels.addLabel(data)
 }
 

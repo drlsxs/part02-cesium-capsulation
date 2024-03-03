@@ -19,6 +19,7 @@ var Label = (function () {
      * @param _a
      */
     Label.prototype.addLabel = function (_a) {
+
         let id = _a.id,
             text = _a.text,
             fillColor = _a.textColor,
@@ -26,12 +27,27 @@ var Label = (function () {
             outlineColor = _a.outlineColor,
             outlineWidth = _a.outlineWidth,
             position = _a.position,
-            scale = _a.scale
-        if (this.caches[id]) return console.warn("文本已存在")
+            scale = _a.scale,
+            textPosition = _a.textPosition === void 0 ? "BOTTOM" : _a.textPosition,
+            width = _a.width,
+            height =  _a.height
+        if (this.caches[id]) {
+            console.warn("文本已存在")
+            return this.caches[id]
+        }
         let _advanceParams = _a.advanceParams || {}
         let label = {
             id,text,fillColor,font,outlineColor,outlineWidth,position, scale,
+            horizontalOrigin : Cesium.HorizontalOrigin.CENTER,
+            verticalOrigin : Cesium.VerticalOrigin.CENTER
         }
+        // 判断文本处于图片位置
+        let pixelOffset = new Cesium.Cartesian2(0, 0)
+        if (textPosition === "BOTTOM" && height) {
+            pixelOffset = new Cesium.Cartesian2(0, height + 10)
+        }
+
+        label.pixelOffset = pixelOffset
         label = Object.assign(label, _advanceParams)
         label = this.labels.add(label)
         this.caches[id] = label

@@ -3,6 +3,7 @@ import { cameraFlyTo, This, useEarth } from "@p/extends/cemap/useEarth/useEarth.
 import plane2 from "@p/models/plane2.png"
 import { addBillboard } from '@p/extends/cemap/useDraw/useBillboard.js'
 import { addSimple, removeSimple } from '@p/extends/cemap/useDraw/useSimple.js'
+import { removeLabel } from '@p/extends/cemap/useDraw/useLabel.js'
 // 画普通点
 const handlefly = () => {
   // cameraFlyTo({
@@ -15,7 +16,7 @@ const handlefly = () => {
 
 // 画普通点
 const drawSimple = () => {
-  addSimple({
+  let a = addSimple({
     id: "111",
     color: Cesium.Color.RED,
     image: plane2,
@@ -23,31 +24,27 @@ const drawSimple = () => {
     width: 50,
     height: 50,
     position: Cesium.Cartesian3.fromDegrees(120, 30),
+    font:"16px"
   })
+  console.log(a)
 
 }
 
 function remove() {
-  // useEarth().useBillboard.remove("111")
-  useEarth().cameraFlyTo({
-    longitude: 120,
-    latitude: 30,
-    height: 200000
-  })
+  removeSimple("111")
 }
 
 function addtext() {
-
   useEarth().useLabel.addLabel({
-    id: "111",
-    color: Cesium.Color.RED,
-    text: "Hello",
-    position: Cesium.Cartesian3.fromDegrees(120, 30),
+    id: "222",
+    textColor: Cesium.Color.RED,
+    text: "一队",
+    position: Cesium.Cartesian3.fromDegrees(134, 28),
   })
 }
 
 function retext() {
-  removeSimple("111")
+  removeLabel("222")
 }
 
 

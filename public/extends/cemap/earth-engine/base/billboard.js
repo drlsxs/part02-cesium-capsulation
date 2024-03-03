@@ -17,7 +17,10 @@ var Billboard = /**class*/(function (_super) {
         let _id = _a.id, _color = _a.color, _width = _a.width, _height = _a.height, _image = _a.image,
             _position = _a.position, _scale = _a.scale, _rotation = _a.rotation
         let _advanceParams = _a.advanceParams || {}
-        if (this.caches[_id]) return console.warn("该标牌已存在")
+        if (this.caches[_id]) {
+            console.warn("该标牌已存在")
+            return this.caches[_id]
+        }
         let b = {
             id: _id,
             color: _color,
@@ -28,13 +31,11 @@ var Billboard = /**class*/(function (_super) {
             scale: _scale,
             rotation: _rotation,
             horizontalOrigin : Cesium.HorizontalOrigin.CENTER,
-            verticalOrigin : Cesium.VerticalOrigin.CENTER
+            verticalOrigin : Cesium.VerticalOrigin.CENTER,
+            heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
         }
         b = Object.assign(b, _advanceParams)
-        b = this.billboards.add({
-            ...b,
-            heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
-        })
+        b = this.billboards.add(b)
         this.caches[_id] = b
         return b
     }
