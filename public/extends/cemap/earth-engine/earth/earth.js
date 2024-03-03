@@ -5,9 +5,7 @@
  * @version 1.0.0
  * @license IMT
  */
-import {setThisEarth} from "@p/extends/cemap/useEarth/useEarth.js";
-import { initAllUtils } from '@p/extends/cemap/earth-engine/initUtils/initUtilsIndex.js'
-
+import { initAllUtils } from '@p/extends/cemap/initUtils/initUtilsIndex.js'
 const {Viewer,Scene} = window.Cesium;
 
 
@@ -47,8 +45,8 @@ var Earth = (function () {
         Earth.instances[this.id] = this;
         // 配置属性
         configureProperties.call(this);
-        // 初始化全部各类工具
-        initAllUtils(this)
+        // 初始化工具
+        initAllUtils.call(this)
     }
 
     Earth.instances = {};
@@ -83,6 +81,9 @@ var Earth = (function () {
             // 移除Cesium Ion logo
             creditContainer: creditContainer,
             shouldAnimate: true,
+            terrainProvider: new Cesium.EllipsoidTerrainProvider({
+                ellipsoid: Cesium.Ellipsoid.WGS84,
+            })
         })
         this.scene = this.viewer.scene;
     };
@@ -95,14 +96,6 @@ var Earth = (function () {
     Earth.getInstance = function (Id) {
         return Earth.instances[Id || "default"];
     }
-
-    Earth.setInstance = function (Id) {
-        let earth = Earth.getInstance(Id);
-        if (earth) {
-            setThisEarth(earth);
-        }
-    }
-
 
 
 

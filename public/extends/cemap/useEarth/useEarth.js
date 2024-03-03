@@ -1,5 +1,4 @@
 import Earth from "@p/extends/cemap/earth-engine/earth/earth.js";
-let earth;
 
 /**
  * 初始化地球实例
@@ -8,22 +7,34 @@ let earth;
  * @param option {Object} 初始化参数
  */
 function useEarth(id, option) {
-    earth = Earth.getInstance(id);
+    let earth = Earth.getInstance(id);
     if (earth) return earth;
     earth = new Earth(id, option);
     return earth;
 }
 
-
-
-
-
 /**
- * 设置当前地球实例
- * @param earthInstance {Earth} 地球实例
+ *
+ * @param _this1
+ * @param _this2
+ * @returns 返回当前this
+ * @constructor
  */
-function setThisEarth(earthInstance) {
-    earth = earthInstance;
+let This = function (_this1, _this2) {
+    if (_this1 === void 0) {
+        _this1 = useEarth()
+    } else if (!(_this1 instanceof Earth)) {
+        if (_this2) {
+            if (_this2 instanceof Earth) {
+                _this1 = useEarth(_this2.id)[_this1.title]
+            } else {
+                _this1 = _this2
+            }
+        } else {
+            _this1 = useEarth()[_this1.title]
+        }
+    }
+    return _this1
 }
 
 
@@ -46,7 +57,7 @@ function cameraFlyTo(option) {
 
     option = Object.assign(baseOP, option);
 
-    earth.viewer.camera.flyTo({
+    This(this).viewer.camera.flyTo({
         destination: window.Cesium.Cartesian3.fromDegrees(option.longitude, option.latitude, option.height),
         orientation: {
             heading: window.Cesium.Math.toRadians(option.heading),
@@ -55,11 +66,11 @@ function cameraFlyTo(option) {
         },
         duration: option.duration,
     });
-}
 
+}
 
 export {
     useEarth,
     cameraFlyTo,
-    setThisEarth,
-};
+    This
+}
