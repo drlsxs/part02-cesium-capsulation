@@ -34,6 +34,12 @@ var Terrain = (function () {
 
     }
 
+    Terrain.prototype.remove = function () {
+        this.earth.viewer.terrainProvider = new Cesium.EllipsoidTerrainProvider({
+            ellipsoid: Cesium.Ellipsoid.WGS84,
+        })
+    }
+
 
     return Terrain
 })()

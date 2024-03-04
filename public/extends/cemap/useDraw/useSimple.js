@@ -1,6 +1,6 @@
+import { This } from '@p/extends/cemap/useEarth/useEarth.js'
 import Label from '@p/extends/cemap/earth-engine/base/label.js'
 import Billboard from '@p/extends/cemap/earth-engine/base/billboard.js'
-import { This } from '@p/extends/cemap/useEarth/useEarth.js'
 
 function addSimple(data) {
     let _this = This(UseSimple, this)
@@ -39,8 +39,8 @@ function remove(simple) {
 
 function UseSimple(earth) {
     // 不要再新建实例，使用原来的实例
-    this.labels = earth.useLabel.labels
-    this.billboards = earth.useBillboard.billboards
+    this.labels = new Label(earth)
+    this.billboards = new Billboard(earth)
     this.simples = {}
 }
 

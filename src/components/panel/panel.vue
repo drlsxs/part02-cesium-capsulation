@@ -1,24 +1,44 @@
 <script setup>
-import { cameraFlyTo, This, useEarth } from "@p/extends/cemap/useEarth/useEarth.js";
+import { cameraFlyTo, useEarth } from "@p/extends/cemap/useEarth/useEarth.js";
 import plane2 from "@p/models/plane2.png"
-import { addSimple, removeSimple } from '@p/extends/cemap/useDraw/useSimple.js'
-import { removeLabel } from '@p/extends/cemap/useDraw/useLabel.js'
+import monitor from "@p/models/monitor.png"
 import Layer from '@p/extends/cemap/earth-engine/layer/layer.js'
-import Label from '@p/extends/cemap/earth-engine/base/label.js'
 import Terrain from '@p/extends/cemap/earth-engine/layer/terrain.js'
+import { generatePosition } from '@p/extends/cemap/utils/utilIndex.js'
+import Billboard from '@p/extends/cemap/earth-engine/base/billboard.js'
+import { onMounted } from 'vue'
+import Label from '@p/extends/cemap/earth-engine/base/label.js'
+import Simple from '@p/extends/cemap/earth-engine/base/simple.js'
+
+/**
+ * @type{Billboard}
+ */
+let bills,bills1,bills2
+/**
+ * @type{Label}
+ */
+let labels
+/**
+ * @type{Simple}
+ */
+let simple
+
+onMounted(() => {
+  bills = new Billboard(useEarth())
+  bills1 = new Billboard(useEarth(), false)
+  bills2 = new Billboard(useEarth(), false)
+  labels = new Label(useEarth())
+  simple = new Simple(useEarth(), false)
+})
+
 // 画普通点
-const handlefly = () => {
-  // cameraFlyTo({
-  //   longitude: 116.39,
-  //   latitude: 39.9,
-  //   height: 1000000,
-  //   duration: 1
-  // })
+function handlefly() {
+  cameraFlyTo(116, 39)
 }
 
 // 画普通点
-const drawSimple = () => {
-  let a = addSimple({
+function drawSimple() {
+  simple.addSimple({
     id: "111",
     color: Cesium.Color.RED,
     image: plane2,
@@ -26,38 +46,111 @@ const drawSimple = () => {
     width: 50,
     height: 50,
     position: Cesium.Cartesian3.fromDegrees(120, 30),
-    font:"16px"
+    font: "16px",
   })
+
 }
 
 function remove() {
-  removeSimple("111")
+  simple.removeSimple("111")
 }
 
 function addtext() {
-  useEarth().useLabel.addLabel({
+  labels.addLabel({
     id: "222",
-    textColor: Cesium.Color.RED,
+    fillColor: Cesium.Color.RED,
     text: "一队",
-    position: Cesium.Cartesian3.fromDegrees(134, 28),
+    position: Cesium.Cartesian3.fromDegrees(110, 25),
+    outlineWidth: 2,
+    outlineColor: Cesium.Color.YELLOW,
   })
 }
 
 function retext() {
-  removeLabel("222")
+  labels.remove("222")
+}
+
+function addPoint() {
+  let pos = generatePosition(108, 24, 1)
+  bills.addBillboard({
+    id: "333",
+    position: pos[0],
+    image: plane2,
+    width: 30,
+    height: 30,
+  })
+}
+
+
+
+function addPoint1() {
+
+  let pos = generatePosition(120, 30, 6)
+  pos.map(po => {
+    bills1.addBillboard({
+      position: po,
+      image: monitor,
+      width: 30,
+      height: 30,
+    })
+
+  })
+
+
+  let pos1 = generatePosition(120, 30, 6)
+  pos1.map(po => {
+    bills2.addBillboard({
+      position: po,
+      image: plane2,
+      width: 30,
+      height: 30,
+    })
+  })
+
+
+}
+
+function rePoint() {
+  bills.remove("333")
+}
+
+function rePoint1() {
+  bills1.removeAll()
+}
+
+function rePoint2() {
+  bills2.removeAll()
+}
+
+function rePoint3() {
+  bills.removeAll()
+}
+
+function addLayer() {
+  let layer = new Layer(useEarth())
+  layer.addTdtImgImgLayer()
+}
+
+function addLayer1() {
+  let layer = new Layer(useEarth())
+  layer.addTdtVecImgLayer()
+
 }
 
 function reAllLayer() {
   let layer = new Layer(useEarth())
   layer.removeAll()
-  layer.addTdtImgImgLayer()
-
 
 }
 
 function addTerrain() {
   let terrain = new Terrain(useEarth())
   terrain.addTerrainFromUrl(Cesium.IonResource.fromAssetId(3956))
+}
+
+function reTerrain() {
+  let terrain = new Terrain(useEarth())
+  terrain.remove()
 }
 
 
@@ -68,20 +161,30 @@ function addTerrain() {
     <h1>Panel 1</h1>
     <button @click="handlefly">相机飞行</button>
     <button @click="drawSimple">普通点</button>
-    <button @click="remove">移除点</button>
+    <button @click="remove">移除普通点</button>
     <button @click="addtext">文本</button>
     <button @click="retext">移除文本</button>
+    <button @click="addPoint">添加点</button>
+    <button @click="rePoint">移除点</button>
+    <button @click="addPoint1">批量添加点</button>
+    <button @click="rePoint1">批量移除点1</button>
+    <button @click="rePoint2">批量移除点2</button>
+    <button @click="rePoint3">移除全部点</button>
+    <button @click="addLayer">添加图层1</button>
+    <button @click="addLayer1">添加图层2</button>
     <button @click="reAllLayer">去掉所有图层</button>
     <button @click="addTerrain">添加地形</button>
+    <button @click="reTerrain">移除地形</button>
 
   </div>
 </template>
 
 <style scoped>
 .panel {
-  h1{
+  h1 {
     color: white;
   }
+
   position: absolute;
   top: 20px;
   left: 20px;

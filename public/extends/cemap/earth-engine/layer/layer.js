@@ -9,14 +9,13 @@ import getLayer from '@p/extends/cemap/earth-engine/layer/constant.js'
  */
 var Layer = (function () {
     function Layer(earth) {
-        this.earth = earth
-        // 图层缓存
+        this.imageryLayers = earth.viewer.imageryLayers
         this.layerCaches = {}
-
+        earth.layer = this
     }
 
     Layer.prototype.removeAll = function () {
-        this.earth.viewer.imageryLayers.removeAll(true)
+        this.imageryLayers.removeAll(true)
         this.layerCaches = {}
     }
 
@@ -28,7 +27,7 @@ var Layer = (function () {
         let imageryProvider = new Cesium.UrlTemplateImageryProvider({
             url: layer.url
         })
-        this.earth.viewer.imageryLayers.addImageryProvider(imageryProvider);
+        this.imageryLayers.addImageryProvider(imageryProvider);
         // 缓存
         this.layerCaches[layer.code] = imageryProvider
     }
@@ -41,7 +40,7 @@ var Layer = (function () {
         let imageryProvider = new Cesium.UrlTemplateImageryProvider({
             url: layer.url
         })
-        this.earth.viewer.imageryLayers.addImageryProvider(imageryProvider);
+        this.imageryLayers.addImageryProvider(imageryProvider);
         // 缓存
         this.layerCaches[layer.code] = imageryProvider
     }
@@ -56,7 +55,7 @@ var Layer = (function () {
             minimumLevel: 3,
             maximumLevel: 18
         })
-        this.earth.viewer.imageryLayers.addImageryProvider(imageryProvider);
+        this.imageryLayers.addImageryProvider(imageryProvider);
         // 缓存
         this.layerCaches[layer.code] = imageryProvider
     }
@@ -70,7 +69,7 @@ var Layer = (function () {
         let imageryProvider = new Cesium.ArcGisMapServerImageryProvider({
             url: layer.url
         })
-        this.earth.viewer.imageryLayers.addImageryProvider(imageryProvider);
+        this.imageryLayers.addImageryProvider(imageryProvider);
         // 缓存
         this.layerCaches[layer.code] = imageryProvider
     }
@@ -84,7 +83,7 @@ var Layer = (function () {
         let imageryProvider = new Cesium.ArcGisMapServerImageryProvider({
             url: layer.url
         })
-        this.earth.viewer.imageryLayers.addImageryProvider(imageryProvider);
+        this.imageryLayers.addImageryProvider(imageryProvider);
         // 缓存
         this.layerCaches[layer.code] = imageryProvider
     }
@@ -102,7 +101,7 @@ var Layer = (function () {
             tileMatrixSetID: "tdtimg",
             show: true
         })
-        this.earth.viewer.imageryLayers.addImageryProvider(imageryProvider);
+        this.imageryLayers.addImageryProvider(imageryProvider);
         // 缓存
         this.layerCaches[layer.code] = imageryProvider
     }
@@ -120,7 +119,7 @@ var Layer = (function () {
             tileMatrixSetID: "tdtvec",
             show: true
         })
-        this.earth.viewer.imageryLayers.addImageryProvider(imageryProvider);
+        this.imageryLayers.addImageryProvider(imageryProvider);
         // 缓存
         this.layerCaches[layer.code] = imageryProvider
     }
@@ -138,7 +137,7 @@ var Layer = (function () {
             tileMatrixSetID: "tdtimg",
             show: true
         })
-        this.earth.viewer.imageryLayers.addImageryProvider(imageryProvider);
+        this.imageryLayers.addImageryProvider(imageryProvider);
         // 缓存
         this.layerCaches[layer.code] = imageryProvider
     }
@@ -156,12 +155,23 @@ var Layer = (function () {
             tileMatrixSetID: "tdtvec",
             show: true
         })
-        this.earth.viewer.imageryLayers.addImageryProvider(imageryProvider);
+        this.imageryLayers.addImageryProvider(imageryProvider);
         // 缓存
         this.layerCaches[layer.code] = imageryProvider
     }
 
-    return Layer
+    return function (earth) {
+        let layer = earth.layer
+        if (!layer) {
+            layer = new Layer(earth)
+        }
+        return layer
+    }
+
 })()
+
+
+
+
 
 export default Layer

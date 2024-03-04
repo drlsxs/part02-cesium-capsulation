@@ -5,24 +5,23 @@
  * @version 1.0.0
  * @license IMT
  */
+import { encodeId } from '@p/extends/cemap/utils/utilIndex.js'
 
 const { Cartesian2 } = window.Cesium
 
 var Label = (function () {
-    function Label(earth) {
+    function Label(earth,single) {
+        single === void 0 ? single = true : void 0
         this.labels = earth.scene.primitives.add(new Cesium.LabelCollection())
         this.caches = {}
+        if (single) earth.useLabel = this
     }
 
-    /**
-     * 添加文本
-     * @param _a
-     */
     Label.prototype.addLabel = function (_a) {
 
         let id = _a.id,
             text = _a.text,
-            fillColor = _a.textColor,
+            fillColor = _a.fillColor,
             font = _a.font,
             outlineColor = _a.outlineColor,
             outlineWidth = _a.outlineWidth,
@@ -30,7 +29,10 @@ var Label = (function () {
             scale = _a.scale,
             textPosition = _a.textPosition === void 0 ? "BOTTOM" : _a.textPosition,
             width = _a.width,
-            height =  _a.height
+            height = _a.height,
+            modules = _a.modules,
+            style = _a.style === void 0 ? Cesium.LabelStyle.FILL_AND_OUTLINE : void 0
+        !id ? id = encodeId(modules, id) : void 0
         if (this.caches[id]) {
             console.warn("文本已存在")
             return this.caches[id]
@@ -38,6 +40,7 @@ var Label = (function () {
         let _advanceParams = _a.advanceParams || {}
         let label = {
             id,text,fillColor,font,outlineColor,outlineWidth,position, scale,
+            style,
             horizontalOrigin : Cesium.HorizontalOrigin.CENTER,
             verticalOrigin : Cesium.VerticalOrigin.CENTER,
         }
@@ -59,7 +62,23 @@ var Label = (function () {
         delete this.caches[id]
     }
 
-    return Label
+    /**
+     * 调用
+     * @param earth
+     * @param single
+     * @returns {*|Label}
+     * @constructor
+     */
+    function CallLabel(earth,single) {
+        let label = earth.useLabel
+        if (!label) label = new Label(earth, single)
+        single ? label = earth.useLabel : label = new Label(earth, single)
+        return label
+    }
+
+    return CallLabel
+
+
 })()
 
 export default Label

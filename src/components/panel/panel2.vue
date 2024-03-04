@@ -1,7 +1,6 @@
 <script setup>
 import { useEarth} from "@p/extends/cemap/useEarth/useEarth.js";
 import plane from "@p/models/plane.png"
-import { addBillboard } from '@p/extends/cemap/useDraw/useBillboard.js'
 
 
 // 画普通点
@@ -16,13 +15,7 @@ const handlefly = () => {
 
 // 画普通点
 const drawSimple = () => {
-  addBillboard({
-    id: "111",
-    color: Cesium.Color.RED,
-    image: plane,
-    scale: 0.1,
-    position: Cesium.Cartesian3.fromDegrees(120, 30),
-  })
+
 }
 
 function remove() {

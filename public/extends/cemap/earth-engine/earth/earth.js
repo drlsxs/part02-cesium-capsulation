@@ -5,7 +5,7 @@
  * @version 1.0.0
  * @license IMT
  */
-import { initAllUtils } from '@p/extends/cemap/initUtils/initUtilsIndex.js'
+// import { initAllUtils } from '@p/extends/cemap/initUtils/initUtilsIndex.js'
 const {Viewer,Scene} = window.Cesium;
 
 
@@ -46,7 +46,7 @@ var Earth = (function () {
         // 配置属性
         configureProperties.call(this);
         // 初始化工具
-        initAllUtils.call(this)
+        // initAllUtils.call(this)
     }
 
     Earth.instances = {};
