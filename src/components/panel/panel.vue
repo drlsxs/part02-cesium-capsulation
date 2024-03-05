@@ -11,7 +11,8 @@ import PointLayer from '@p/extends/cemap/earth-engine/base/point.js'
 import SimpleLayer from '@p/extends/cemap/earth-engine/base/simple.js'
 import LabelLayer from '@p/extends/cemap/earth-engine/base/label.js'
 import BillboardLayer from '@p/extends/cemap/earth-engine/base/billboard.js'
-import { genLineStr } from '@p/extends/cemap/utils/line.js'
+import { genLineStr, genRandomLine } from '@p/extends/cemap/utils/line.js'
+import PolylineGeo from '@p/extends/cemap/earth-engine/geometry/PolylineGeo.js'
 
 /**
  * @type{BillboardLayer}
@@ -182,18 +183,35 @@ function reTerrain() {
 }
 
 function addPolyline() {
-  let pos = genLineStr("120,23;130,33")
+
+
   polyline.addPolyline({
     id: "line",
-    positions: pos,
+    positions: positions,
     width: 9,
-    color: new Cesium.Color(1.0, 1.0, 0.0, 1.0)
+    color: colors,
   })
 }
 
 function rePolyline() {
   polyline.remove("line")
 }
+
+function addPolylineGeo() {
+  /**
+   *
+   * @type {PolylineGeo}
+   */
+  let pyno = new PolylineGeo(useEarth())
+  let { positions, colors } = genRandomLine(120, 30)
+  pyno.addLine({
+    positions: positions,
+    colors: colors,
+    arcType: Cesium.ArcType.NONE,
+    colorsPerVertex: true,
+  })
+}
+
 
 
 
@@ -223,6 +241,9 @@ function rePolyline() {
     <button @click="reTerrain">移除地形</button>
     <button @click="addPolyline">添加线条</button>
     <button @click="rePolyline">移除线条</button>
+    <br/>
+
+    <button @click="addPolylineGeo">添加线图元</button>
 
   </div>
 </template>

@@ -19,26 +19,10 @@ var Earth = (function () {
      */
     function Earth(id, options) {
         // 视图
-        /**
-         *
-         * @type {Viewer}
-         */
         this.viewer = void 0
-        /**
-         *
-         * @type {Scene}
-         */
         this.scene = void 0
         this.primitives = void 0
-        /**
-         *
-         * @type {string | number}
-         */
         this.id = id ? id : "default";
-        /**
-         *
-         * @type {Object}
-         */
         this.options = options;
         // 初始化地图
         initEarth.call(this);
@@ -92,7 +76,7 @@ var Earth = (function () {
     /**
      * 获取地球实例
      * @param Id {String} 地球实例Id
-     * @returns {*} 返回地球实例
+     * @returns {Earth} 返回地球实例
      */
     Earth.getInstance = function (Id) {
         return Earth.instances[Id || "default"];

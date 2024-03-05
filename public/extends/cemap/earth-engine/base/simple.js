@@ -1,10 +1,10 @@
-import Label from '@p/extends/cemap/earth-engine/base/label.js'
-import Billboard from '@p/extends/cemap/earth-engine/base/billboard.js'
+import LabelLayer from '@p/extends/cemap/earth-engine/base/label.js'
+import BillboardLayer from '@p/extends/cemap/earth-engine/base/billboard.js'
 
 var SimpleLayer = (function () {
     function SimpleLayer(earth) {
-        this.labels = new Label(earth)
-        this.billboards = new Billboard(earth)
+        this.labels = new LabelLayer(earth)
+        this.billboards = new BillboardLayer(earth)
         this.simples = {}
     }
 

@@ -3,14 +3,14 @@ export class LabelLayer {
 
     labels: LabelCollection;
 
-    addLabel({id, text, fillColor, font, outlineColor, outlineWidth, position, scale, textPosition, modules}: {
+    addLabel(_data: {
         id?: string;
         text: string;
         fillColor: Color;
+        position: Cartesian3;
         font?: string;
         outlineColor?: Color;
         outlineWidth?: number;
-        position: Cartesian3;
         scale?: number;
         textPosition?: string;
         modules?: string[];

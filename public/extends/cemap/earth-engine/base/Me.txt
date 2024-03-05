@@ -1,0 +1,7 @@
+矢量图层 primitive 集合 【primitiveCollection】
+base 基础类
+billboard 广告牌
+label 标牌
+point 基本点
+polyline 线
+simple 带广告牌和标牌的普通点

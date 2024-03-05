@@ -52,7 +52,23 @@ function genLineList(data, lon = "lon", lat = "lat", alt = "alt") {
     return list
 }
 
+function genRandomLine(startLng, startLat) {
+
+    const positions = [];
+    const colors = [];
+    for (let j = 0; j <= 50; j += 5) {
+        positions.push(
+            Cesium.Cartesian3.fromDegrees(startLng + j, startLat, 50000.0 * (j % 10))
+        );
+        colors.push(Cesium.Color.fromRandom({ alpha: 1.0 }));
+    }
+
+    return {positions, colors}
+
+}
+
 export {
     genLineStr,
     genLineList,
+    genRandomLine
 }

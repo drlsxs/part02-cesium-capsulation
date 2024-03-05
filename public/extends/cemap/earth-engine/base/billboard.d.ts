@@ -3,15 +3,16 @@ export class BillboardLayer  {
 
     billboards: BillboardCollection;
 
-    addBillboard({id, color, width, height, image, position, scale, rotation, modules}: {
+    addBillboard(_data: {
         id?: string;
+        image: string;
+        position: Cartesian3;
         color?: Color;
         width?: number;
         height?: number;
-        image: string;
-        position: Cartesian3;
         scale?: number;
         rotation?: number;
         modules?: string[];
+        advanceParams: Object;
     }): CesiumBillboard
 }

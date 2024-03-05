@@ -1,5 +1,5 @@
-import {Label} from "./label";
-import {Billboard} from "./billboard";
+import {LabelLayer} from "./label";
+import {BillboardLayer} from "./billboard";
 import {Cartesian3, Color, LabelStyle, Label as CesiumLabel, Billboard as CesiumBillboard} from "cesium";
 
 export class SimpleData {
@@ -12,27 +12,24 @@ export class SimpleData {
 }
 
 export class SimpleLayer {
-    labels: Label;
-    billboards: Billboard;
+    labels: LabelLayer;
+    billboards:BillboardLayer;
     simples: Object;
 
 
-    addSimple({
-                  id, color, width, height, image, rotation, text, fillColor, font, outlineWidth,
-                  outlineColor, position, scale, textPosition, modules, style
-              }: {
+    addSimple(_data: {
         id?: string;
+        image: string;
+        text: string;
+        position: Cartesian3;
         color?: Color;
         width?: number;
         height?: number;
-        image: string;
         rotation?: number;
-        text: string;
         fillColor?: Color;
         font?: string;
         outlineColor?: Color;
         outlineWidth?: number;
-        position: Cartesian3;
         scale?: number;
         textPosition?: string;
         modules?: string[];

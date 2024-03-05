@@ -2,7 +2,7 @@ import Earth from "@p/extends/cemap/earth-engine/earth/earth.js";
 
 /**
  * 初始化地球实例
- * @returns {Earth}
+ * @returns
  * @param [id] {String} 地球实例Id
  * @param [option] {Object} 初始化参数
  */
