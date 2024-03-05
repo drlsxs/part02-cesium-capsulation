@@ -1,16 +1,14 @@
 import Label from '@p/extends/cemap/earth-engine/base/label.js'
 import Billboard from '@p/extends/cemap/earth-engine/base/billboard.js'
 
-var Simple = (function () {
-    function Simple(earth, single) {
-        single === void 0 ? single = true : void 0
-        this.labels = new Label(earth, single)
-        this.billboards = new Billboard(earth, single)
+var SimpleLayer = (function () {
+    function SimpleLayer(earth) {
+        this.labels = new Label(earth)
+        this.billboards = new Billboard(earth)
         this.simples = {}
-        if (single) earth.useSimple = this
     }
 
-    Simple.prototype.addSimple = function (data) {
+    SimpleLayer.prototype.addSimple = function (data) {
         let _b =  this.billboards.addBillboard(data)
         // 获取图片的宽高
         let width = _b.width / 2,
@@ -30,10 +28,14 @@ var Simple = (function () {
         return this.simples[data.id]
     }
 
-    Simple.prototype.removeSimple = function (id) {
+    SimpleLayer.prototype.removeSimple = function (id) {
         this.labels.remove(id)
         this.billboards.remove(id)
         delete this.simples[id]
+    }
+
+    SimpleLayer.prototype.getSimple = function (id) {
+        return this.simples[id]
     }
 
     function remove(simple) {
@@ -42,26 +44,12 @@ var Simple = (function () {
         delete simple.simples[this.id]
     }
 
-    /**
-     * 调用
-     * @param earth
-     * @param single
-     * @returns {*|Label}
-     * @constructor
-     */
-    function CallSimple(earth,single) {
-        let simple = earth.useSimple
-        if (!simple) simple = new Simple(earth, single)
-        single ? simple = earth.useSimple : simple = new Simple(earth, single)
-        return simple
-    }
-
-    return CallSimple
+    return SimpleLayer
 
 
 })()
 
-export default Simple
+export default SimpleLayer
 
 
 

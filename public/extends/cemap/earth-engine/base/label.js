@@ -9,17 +9,16 @@ import { encodeId } from '@p/extends/cemap/utils/utilIndex.js'
 
 const { Cartesian2 } = window.Cesium
 
-var Label = (function () {
-    function Label(earth,single) {
-        single === void 0 ? single = true : void 0
+var LabelLayer = (function () {
+    function LabelLayer(earth) {
         this.labels = earth.scene.primitives.add(new Cesium.LabelCollection())
         this.caches = {}
-        if (single) earth.useLabel = this
     }
 
-    Label.prototype.addLabel = function (_a) {
+    LabelLayer.prototype.addLabel = function (_a) {
 
-        let id = _a.id,
+        let modules = _a.modules,
+            id = encodeId(modules, _a.id),
             text = _a.text,
             fillColor = _a.fillColor,
             font = _a.font,
@@ -30,9 +29,7 @@ var Label = (function () {
             textPosition = _a.textPosition === void 0 ? "BOTTOM" : _a.textPosition,
             width = _a.width,
             height = _a.height,
-            modules = _a.modules,
             style = _a.style === void 0 ? Cesium.LabelStyle.FILL_AND_OUTLINE : void 0
-        !id ? id = encodeId(modules, id) : void 0
         if (this.caches[id]) {
             console.warn("文本已存在")
             return this.caches[id]
@@ -57,28 +54,14 @@ var Label = (function () {
         return label
     }
 
-    Label.prototype.remove = function (id) {
+    LabelLayer.prototype.remove = function (id) {
         this.labels.remove(this.caches[id])
         delete this.caches[id]
     }
 
-    /**
-     * 调用
-     * @param earth
-     * @param single
-     * @returns {*|Label}
-     * @constructor
-     */
-    function CallLabel(earth,single) {
-        let label = earth.useLabel
-        if (!label) label = new Label(earth, single)
-        single ? label = earth.useLabel : label = new Label(earth, single)
-        return label
-    }
-
-    return CallLabel
+    return LabelLayer
 
 
 })()
 
-export default Label
+export default LabelLayer

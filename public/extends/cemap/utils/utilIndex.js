@@ -9,9 +9,9 @@ const { Cartesian3 } = Cesium
 function generatePosition(lon, lat, num) {
     let list = []
     for (let i = 0; i < num; i++) {
-        lon = lon + Math.random() * 0.5
-        lat = lat + Math.random() * 0.5
-        list.push(new Cesium.Cartesian3.fromDegrees(lon, lat))
+        let  lon1 = lon + Math.random() * 0.5
+        let  lat1 = lat + Math.random() * 0.5
+        list.push(new Cesium.Cartesian3.fromDegrees(lon1, lat1))
     }
     return list
 }

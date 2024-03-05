@@ -23,12 +23,13 @@ var Earth = (function () {
          *
          * @type {Viewer}
          */
-        this.viewer = null;
+        this.viewer = void 0
         /**
          *
          * @type {Scene}
          */
-        this.scene = null;
+        this.scene = void 0
+        this.primitives = void 0
         /**
          *
          * @type {string | number}
@@ -84,7 +85,9 @@ var Earth = (function () {
             // terrain: Cesium.Terrain.fromWorldTerrain(),
         })
         this.scene = this.viewer.scene;
-    };
+        this.primitives = this.scene.primitives
+
+    }
 
     /**
      * 获取地球实例
@@ -96,9 +99,8 @@ var Earth = (function () {
     }
 
 
-
     window.Earth = Earth;
-    return Earth;
+    return Earth
 
 
 })();

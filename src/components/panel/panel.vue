@@ -5,30 +5,41 @@ import monitor from "@p/models/monitor.png"
 import Layer from '@p/extends/cemap/earth-engine/layer/layer.js'
 import Terrain from '@p/extends/cemap/earth-engine/layer/terrain.js'
 import { generatePosition } from '@p/extends/cemap/utils/utilIndex.js'
-import Billboard from '@p/extends/cemap/earth-engine/base/billboard.js'
 import { onMounted } from 'vue'
-import Label from '@p/extends/cemap/earth-engine/base/label.js'
-import Simple from '@p/extends/cemap/earth-engine/base/simple.js'
+import PolylineLayer from '@p/extends/cemap/earth-engine/base/polyline.js'
+import PointLayer from '@p/extends/cemap/earth-engine/base/point.js'
+import SimpleLayer from '@p/extends/cemap/earth-engine/base/simple.js'
+import LabelLayer from '@p/extends/cemap/earth-engine/base/label.js'
+import BillboardLayer from '@p/extends/cemap/earth-engine/base/billboard.js'
+import { genLineStr } from '@p/extends/cemap/utils/line.js'
 
 /**
- * @type{Billboard}
+ * @type{BillboardLayer}
  */
-let bills,bills1,bills2
+let bills
 /**
- * @type{Label}
+ * @type{LabelLayer}
  */
 let labels
 /**
- * @type{Simple}
+ * @type{SimpleLayer}
  */
 let simple
+/**
+ * @type{PointLayer}
+ */
+let point
+/**
+ * @type{PolylineLayer}
+ */
+let polyline
 
 onMounted(() => {
-  bills = new Billboard(useEarth())
-  bills1 = new Billboard(useEarth(), false)
-  bills2 = new Billboard(useEarth(), false)
-  labels = new Label(useEarth())
-  simple = new Simple(useEarth(), false)
+  bills = new BillboardLayer(useEarth())
+  labels = new LabelLayer(useEarth())
+  simple = new SimpleLayer(useEarth())
+  point = new PointLayer(useEarth())
+  polyline = new PolylineLayer(useEarth())
 })
 
 // 画普通点
@@ -38,7 +49,7 @@ function handlefly() {
 
 // 画普通点
 function drawSimple() {
-  simple.addSimple({
+  let a =  simple.addSimple({
     id: "111",
     color: Cesium.Color.RED,
     image: plane2,
@@ -48,11 +59,27 @@ function drawSimple() {
     position: Cesium.Cartesian3.fromDegrees(120, 30),
     font: "16px",
   })
-
 }
 
 function remove() {
   simple.removeSimple("111")
+}
+
+function addPointz() {
+  let pos = generatePosition(112, 33, 100)
+  pos.map(po => {
+    point.addPoint({
+      position: po,
+      color: Cesium.Color.RED,
+      pixelSize: 6,
+      outlineWidth: 2,
+      outlineColor: Cesium.Color.YELLOW,
+    })
+  })
+}
+
+function removePoint() {
+
 }
 
 function addtext() {
@@ -87,11 +114,12 @@ function addPoint1() {
 
   let pos = generatePosition(120, 30, 6)
   pos.map(po => {
-    bills1.addBillboard({
+    bills.addBillboard({
       position: po,
       image: monitor,
       width: 30,
       height: 30,
+      modules: ["aa"],
     })
 
   })
@@ -99,11 +127,12 @@ function addPoint1() {
 
   let pos1 = generatePosition(120, 30, 6)
   pos1.map(po => {
-    bills2.addBillboard({
+    bills.addBillboard({
       position: po,
       image: plane2,
       width: 30,
       height: 30,
+      modules: ["bb"],
     })
   })
 
@@ -115,11 +144,11 @@ function rePoint() {
 }
 
 function rePoint1() {
-  bills1.removeAll()
+  bills.removeModule(["aa"])
 }
 
 function rePoint2() {
-  bills2.removeAll()
+  bills.removeModule(["bb"])
 }
 
 function rePoint3() {
@@ -140,7 +169,6 @@ function addLayer1() {
 function reAllLayer() {
   let layer = new Layer(useEarth())
   layer.removeAll()
-
 }
 
 function addTerrain() {
@@ -153,6 +181,22 @@ function reTerrain() {
   terrain.remove()
 }
 
+function addPolyline() {
+  let pos = genLineStr("120,23;130,33")
+  polyline.addPolyline({
+    id: "line",
+    positions: pos,
+    width: 9,
+    color: new Cesium.Color(1.0, 1.0, 0.0, 1.0)
+  })
+}
+
+function rePolyline() {
+  polyline.remove("line")
+}
+
+
+
 
 </script>
 
@@ -160,8 +204,10 @@ function reTerrain() {
   <div class="panel">
     <h1>Panel 1</h1>
     <button @click="handlefly">相机飞行</button>
-    <button @click="drawSimple">普通点</button>
-    <button @click="remove">移除普通点</button>
+    <button @click="drawSimple">简单点</button>
+    <button @click="remove">移除简单点</button>
+    <button @click="addPointz">普通点</button>
+    <button @click="removePoint">移除普通点</button>
     <button @click="addtext">文本</button>
     <button @click="retext">移除文本</button>
     <button @click="addPoint">添加点</button>
@@ -175,6 +221,8 @@ function reTerrain() {
     <button @click="reAllLayer">去掉所有图层</button>
     <button @click="addTerrain">添加地形</button>
     <button @click="reTerrain">移除地形</button>
+    <button @click="addPolyline">添加线条</button>
+    <button @click="rePolyline">移除线条</button>
 
   </div>
 </template>

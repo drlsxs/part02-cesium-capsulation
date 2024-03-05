@@ -5,24 +5,27 @@
  * @version 1.0.0
  * @license IMT
  */
-import Base from '@p/extends/cemap/earth-engine/base/base.js'
 import { encodeId, getModule } from '@p/extends/cemap/utils/utilIndex.js'
+import Base from '@p/extends/cemap/earth-engine/base/base.js'
 
-var Billboard = /**class*/(function (_super) {
-    function Billboard(earth,single) {
-        single === void 0 ? single = true : void 0
+var BillboardLayer = /**class*/(function (Super) {
+    function BillboardLayer(earth) {
         this.billboards = earth.scene.primitives.add(new Cesium.BillboardCollection({scene:earth.scene}))
         this.caches = {}
-        if (single) earth.useBillboard = this
     }
 
 
-
-    Billboard.prototype.addBillboard = function (_a) {
-        let id = _a.id, color = _a.color, width = _a.width, height = _a.height, image = _a.image,
-            position = _a.position, scale = _a.scale, rotation = _a.rotation, modules = _a.modules,
+    BillboardLayer.prototype.addBillboard = function (_a) {
+        let modules = _a.modules,
+            id = encodeId(modules, _a.id),
+            color = _a.color,
+            width = _a.width,
+            height = _a.height,
+            image = _a.image,
+            position = _a.position,
+            scale = _a.scale,
+            rotation = _a.rotation,
             advanceParams = _a.advanceParams || {}
-        !id ? id = encodeId(modules, id) : void 0
         if (this.caches[id]) {
             console.warn("该标牌已存在")
             return this.caches[id]
@@ -39,16 +42,16 @@ var Billboard = /**class*/(function (_super) {
         return b
     }
 
-    Billboard.prototype.getBillboard = function (id) {
+    BillboardLayer.prototype.getBillboard = function (id) {
         return this.caches[id]
     }
 
-    Billboard.prototype.remove = function (id) {
+    BillboardLayer.prototype.remove = function (id) {
         this.billboards.remove(this.caches[id])
         delete this.caches[id]
     }
 
-    Billboard.prototype.getModule = function (modules) {
+    BillboardLayer.prototype.getModule = function (modules) {
         let list = []
         let ids = getModule(this.caches, modules)
         ids.map(id => {
@@ -57,41 +60,27 @@ var Billboard = /**class*/(function (_super) {
         return list
     }
 
-    Billboard.prototype.removeModule = function (modules) {
+    BillboardLayer.prototype.removeModule = function (modules) {
         let ids = getModule(this.caches, modules)
         ids.map(id => {
             this.remove(id)
         })
     }
 
-    Billboard.prototype.removeAll = function () {
+    BillboardLayer.prototype.removeAll = function () {
         this.billboards.removeAll()
         this.caches = {}
     }
 
-    Billboard.prototype.destroy = function () {
+    BillboardLayer.prototype.destroy = function () {
         this.removeAll()
         this.billboards.destroy()
     }
 
-    /**
-     * 调用
-     * @param earth
-     * @param single
-     * @returns {*|Billboard}
-     * @constructor
-     */
-    function CallBillboard(earth,single) {
-        let billboard = earth.useBillboard
-        if (!billboard) billboard = new Billboard(earth, single)
-        single ? billboard = earth.useBillboard : billboard = new Billboard(earth, single)
-        return billboard
-    }
-
-    return CallBillboard
+    return BillboardLayer
 
 
 
 })(Base)
 
-export default Billboard
+export default BillboardLayer
