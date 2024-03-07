@@ -7,6 +7,7 @@ var PolylineLayer = (function () {
     }
 
     PolylineLayer.prototype.addPolyline = function (_a) {
+
         var moudles = _a.modules,
             id = encodeId(moudles, _a.id),
             type = _a.type || 'Color',

@@ -1,4 +1,4 @@
-import {Cartesian3} from "cesium"
+import {Cartesian3,Color} from "cesium"
 /**
  * 从线条字符串中生成线
  * @param linStr{string}
@@ -52,18 +52,26 @@ function genLineList(data, lon = "lon", lat = "lat", alt = "alt") {
     return list
 }
 
-function genRandomLine(startLng, startLat) {
+/**
+ * 返回随机位置和颜色的线条，可设置固定高度，和经纬度范围
+ * @param startLng{number}
+ * @param startLat{number}
+ * @param height{number}
+ * @returns {{positions: Cartesian3[], colors: Color[]}}
+ */
+function genRandomLine(startLng, startLat, height) {
 
     const positions = [];
     const colors = [];
+
     for (let j = 0; j <= 50; j += 5) {
         positions.push(
-            Cesium.Cartesian3.fromDegrees(startLng + j, startLat, 50000.0 * (j % 10))
+            Cesium.Cartesian3.fromDegrees(startLng + j, startLat, height === 0 ? height : height ? height : 50000.0 * (j % 10))
         );
         colors.push(Cesium.Color.fromRandom({ alpha: 1.0 }));
     }
 
-    return {positions, colors}
+    return { positions, colors }
 
 }
 

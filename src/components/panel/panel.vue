@@ -13,6 +13,7 @@ import LabelLayer from '@p/extends/cemap/earth-engine/base/label.js'
 import BillboardLayer from '@p/extends/cemap/earth-engine/base/billboard.js'
 import { genLineStr, genRandomLine } from '@p/extends/cemap/utils/line.js'
 import PolylineGeo from '@p/extends/cemap/earth-engine/geometry/PolylineGeo.js'
+import EarthEvent from '@p/extends/cemap/earth-engine/event/earthEvent.js'
 
 /**
  * @type{BillboardLayer}
@@ -35,12 +36,23 @@ let point
  */
 let polyline
 
+/**
+ * @type{EarthEvent}
+ */
+let event
+
+
 onMounted(() => {
   bills = new BillboardLayer(useEarth())
   labels = new LabelLayer(useEarth())
   simple = new SimpleLayer(useEarth())
   point = new PointLayer(useEarth())
   polyline = new PolylineLayer(useEarth())
+  event = new EarthEvent(useEarth())
+  event.onClick("aa", addleftEvent1)
+  event.onClick("default", addleftEvent)
+
+
 })
 
 // 画普通点
@@ -120,7 +132,7 @@ function addPoint1() {
       image: monitor,
       width: 30,
       height: 30,
-      modules: ["aa"],
+      modules: "aa",
     })
 
   })
@@ -133,7 +145,7 @@ function addPoint1() {
       image: plane2,
       width: 30,
       height: 30,
-      modules: ["bb"],
+      modules: "bb",
     })
   })
 
@@ -145,11 +157,11 @@ function rePoint() {
 }
 
 function rePoint1() {
-  bills.removeModule(["aa"])
+  bills.removeModule("aa")
 }
 
 function rePoint2() {
-  bills.removeModule(["bb"])
+  bills.removeModule("bb")
 }
 
 function rePoint3() {
@@ -182,19 +194,76 @@ function reTerrain() {
   terrain.remove()
 }
 
+
 function addPolyline() {
 
+  const { positions } = genRandomLine(120, 17, 0)
 
   polyline.addPolyline({
-    id: "line",
     positions: positions,
-    width: 9,
-    color: colors,
+    width: 2,
+    color: Cesium.Color.RED,
+  })
+}
+
+function addPolyline1() {
+
+  const { positions } = genRandomLine(120, 20, 0)
+
+  polyline.addPolyline({
+    positions: positions,
+    width: 2,
+    type: "PolylineGlow",
+    color: Cesium.Color.CORNFLOWERBLUE,
+    uniforms: {
+      glowPower: 0.2,
+      taperPower: 0.5,
+    },
+  })
+}
+
+function addPolyline2() {
+
+  const { positions } = genRandomLine(120, 23, 200000)
+
+  polyline.addPolyline({
+    positions: positions,
+    width: 2,
+    type: "PolylineOutline",
+    color: Cesium.Color.ORANGE,
+    uniforms: {
+      outlineWidth: 2,
+      outlineColor: Cesium.Color.BLACK
+    },
+  })
+}
+
+function addPolyline3() {
+
+  const { positions } = genRandomLine(120, 26, 200000)
+
+  polyline.addPolyline({
+    positions: positions,
+    width: 2,
+    type: "PolylineArrow",
+    color: Cesium.Color.PURPLE,
+  })
+}
+
+function addPolyline4() {
+
+  const { positions } = genRandomLine(120, 29, 200000)
+
+  polyline.addPolyline({
+    positions: positions,
+    width: 2,
+    type: "PolylineDash",
+    color: Cesium.Color.CYAN,
   })
 }
 
 function rePolyline() {
-  polyline.remove("line")
+  polyline.removeAll()
 }
 
 function addPolylineGeo() {
@@ -203,7 +272,7 @@ function addPolylineGeo() {
    * @type {PolylineGeo}
    */
   let pyno = new PolylineGeo(useEarth())
-  let { positions, colors } = genRandomLine(120, 30)
+  let { positions, colors } = genRandomLine(120, 32)
   pyno.addLine({
     positions: positions,
     colors: colors,
@@ -212,7 +281,14 @@ function addPolylineGeo() {
   })
 }
 
+function addleftEvent(data) {
+  console.log(data,0)
 
+}
+function addleftEvent1(data) {
+  console.log(data,1)
+
+}
 
 
 
@@ -239,11 +315,17 @@ function addPolylineGeo() {
     <button @click="reAllLayer">去掉所有图层</button>
     <button @click="addTerrain">添加地形</button>
     <button @click="reTerrain">移除地形</button>
-    <button @click="addPolyline">添加线条</button>
-    <button @click="rePolyline">移除线条</button>
-    <br/>
 
+    <br/>
+    <button @click="addPolyline">普通线</button>
+    <button @click="addPolyline1">发光线</button>
+    <button @click="addPolyline2">轮廓线</button>
+    <button @click="addPolyline3">箭头线</button>
+    <button @click="addPolyline4">虚线</button>
+    <button @click="rePolyline">移除线条</button>
     <button @click="addPolylineGeo">添加线图元</button>
+
+    <br>
 
   </div>
 </template>

@@ -32,7 +32,7 @@ export class SimpleLayer {
         outlineWidth?: number;
         scale?: number;
         textPosition?: string;
-        modules?: string[];
+        modules?: string;
         style?: LabelStyle;
     }): SimpleData
 

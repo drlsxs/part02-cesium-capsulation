@@ -12,7 +12,7 @@ export class BillboardLayer  {
         height?: number;
         scale?: number;
         rotation?: number;
-        modules?: string[];
+        modules?: string;
         advanceParams: Object;
     }): CesiumBillboard
 }

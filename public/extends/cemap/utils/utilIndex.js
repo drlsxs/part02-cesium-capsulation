@@ -32,7 +32,8 @@ function genUUid() {
 function encodeId(modules, id) {
     try {
         !id ? id = genUUid() : void 0
-        modules && modules.length ? id = `${ id }@${ modules.join("@") }` : void 0
+        if (id.includes("@")) console.error("id不能包含@符号")
+        typeof modules === 'string' && modules.length  ? id = `${ id }@${ modules }` : void 0
         return id
     } catch (e){
         console.error(e)
@@ -42,16 +43,17 @@ function encodeId(modules, id) {
 /**
  * 解码id
  * @param id
- * @returns {{id, modules: []}}
+ * @returns {{id, modules: string}}
  */
 function decodeId(id) {
     try {
         let ids = id.split("@")
         id = ids[0]
         ids.splice(0, 1)
+        let modules = ids.join("@")
         return {
             id: id,
-            modules: ids,
+            modules: modules ? modules : void 0,
         }
     } catch (e){
         console.error(e)
@@ -61,13 +63,13 @@ function decodeId(id) {
 /**
  * 从缓存中获取模块
  * @param obj
- * @param modules {[]}
+ * @param modules{string} 模块用@分割
  */
 function getModule(obj,modules) {
     let list = []
     for (let objKey in obj) {
         let encodeId = decodeId(objKey)
-        if (encodeId.modules.join() === modules.join()) {
+        if (encodeId.modules === modules) {
             list.push(objKey)
         }
     }
