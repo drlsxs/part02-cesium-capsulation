@@ -10,15 +10,11 @@ onMounted(() => {
 
 });
 
-function getEarth() {
-  useEarth("aaa")
-}
 
 </script>
 
 <template>
   <div id="tes">
-    <button @click="getEarth">点击</button>
     <div id="cesiumContainer"></div>
     <Panel></Panel>
   </div>

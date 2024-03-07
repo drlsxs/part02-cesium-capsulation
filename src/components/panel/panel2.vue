@@ -1,18 +1,30 @@
 <script setup>
-import {cameraFlyTo} from "@p/extends/cemap/useEarth/useEarth.js";
-import Earth from "@p/extends/cemap/earth-engine/earth/earth.js";
+import { useEarth} from "@p/extends/cemap/useEarth/useEarth.js";
+import plane from "@p/models/plane.png"
 
 
 // 画普通点
-function handlefly() {
-  cameraFlyTo({
-    longitude: 116.39,
-    latitude: 39.9,
-    height: 1000000,
-    duration: 1
-  })
+const handlefly = () => {
+  // cameraFlyTo({
+  //   longitude: 116.39,
+  //   latitude: 39.9,
+  //   height: 1000000,
+  //   duration: 1
+  // })
 }
 
+// 画普通点
+const drawSimple = () => {
+
+}
+
+function remove() {
+  useEarth("id2").useBillboard.remove("111")
+}
+
+function addtext() {
+
+}
 
 
 
@@ -21,7 +33,12 @@ function handlefly() {
 <template>
   <div class="panel">
     <h1>Panel 2</h1>
-    <button @click="handlefly">画普通点</button>
+    <button @click="handlefly">相机飞行</button>
+    <button @click="drawSimple">普通点</button>
+    <button @click="remove">移除点</button>
+    <button @click="addtext">文本</button>
+    <button @click="addtext">移除文本</button>
+
   </div>
 </template>
 

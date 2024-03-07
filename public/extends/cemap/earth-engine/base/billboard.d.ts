@@ -1,11 +1,18 @@
-import {BillboardCollection} from "cesium";
-export class Billboard {
+import {BillboardCollection, Cartesian3, Color, Billboard as CesiumBillboard } from "cesium";
+export class BillboardLayer  {
 
     billboards: BillboardCollection;
 
-    add({id,color,image}: {
-        id: string;
-        color: string;
+    addBillboard(_data: {
+        id?: string;
         image: string;
-    }): void
+        position: Cartesian3;
+        color?: Color;
+        width?: number;
+        height?: number;
+        scale?: number;
+        rotation?: number;
+        modules?: string;
+        advanceParams: Object;
+    }): CesiumBillboard
 }

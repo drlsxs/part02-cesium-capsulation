@@ -1,19 +1,14 @@
-import {Scene, Viewer} from "cesium";
-declare namespace earth {
+import {PrimitiveCollection, Scene, Viewer} from "cesium";
+export class Earth {
 
-    /**
-     * test
-     */
-    const test1: string;
+    viewer: Viewer;
 
-    class Earth {
-        viewer: Viewer;
-        scene: Scene;
-        id: string | number;
-        // 参数
-        options: Object;
-    }
+    scene: Scene;
 
+    primitives: PrimitiveCollection;
 
+    id: string | number;
 
+    // 参数
+    options: Object;
 }
