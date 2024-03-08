@@ -56,7 +56,7 @@ function genLineList(data, lon = "lon", lat = "lat", alt = "alt") {
  * 返回随机位置和颜色的线条，可设置固定高度，和经纬度范围
  * @param startLng{number}
  * @param startLat{number}
- * @param height{number}
+ * @param [height]{number}
  * @returns {{positions: Cartesian3[], colors: Color[]}}
  */
 function genRandomLine(startLng, startLat, height) {

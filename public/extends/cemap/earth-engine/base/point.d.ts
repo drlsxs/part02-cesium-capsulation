@@ -2,6 +2,8 @@ import {Cartesian3, Color, PointPrimitive, PointPrimitiveCollection, Viewer} fro
 export class PointLayer {
     points: PointPrimitiveCollection;
     caches: Object;
+
+
     addPoint(_data: {
         id?: string;
         color: Color;

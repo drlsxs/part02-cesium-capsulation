@@ -38,7 +38,8 @@ var PointLayer = (function () {
     }
 
     PointLayer.prototype.removeAll = function (id) {
-
+        this.points.removeAll()
+        this.caches = {}
     }
 
     return PointLayer

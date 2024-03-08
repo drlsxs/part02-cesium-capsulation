@@ -14,6 +14,9 @@ import BillboardLayer from '@p/extends/cemap/earth-engine/base/billboard.js'
 import { genLineStr, genRandomLine } from '@p/extends/cemap/utils/line.js'
 import PolylineGeo from '@p/extends/cemap/earth-engine/geometry/PolylineGeo.js'
 import EarthEvent from '@p/extends/cemap/earth-engine/event/earthEvent.js'
+import PolylineTrailMaterialProperty from '@p/extends/cemap/earth-engine/material/polylineTrain.js'
+import polylineMaterialImg from "@p/extends/cemap/assets/images/polylinematerial/polylinemigrate.png"
+
 
 /**
  * @type{BillboardLayer}
@@ -50,9 +53,13 @@ onMounted(() => {
   polyline = new PolylineLayer(useEarth())
   event = new EarthEvent(useEarth())
   event.onClick("aa", addleftEvent1)
-  event.onClick("default", addleftEvent)
+  event.onClick("cc", addleftEvent)
+  // 材质
 
 
+  let layer = new Layer(useEarth())
+  layer.addTdtImgImgLayer()
+  cameraFlyTo(106, 30,9000000)
 })
 
 // 画普通点
@@ -92,7 +99,7 @@ function addPointz() {
 }
 
 function removePoint() {
-
+  point.removeAll()
 }
 
 function addtext() {
@@ -262,6 +269,45 @@ function addPolyline4() {
   })
 }
 
+function addPolyline5() {
+
+
+  // polyline.addPolyline({
+  //   positions: positions,
+  //   width: 2,
+  //   type: "PolylineTrail",
+  //   color: Cesium.Color.CYAN,
+  // })
+
+  let material = new PolylineTrailMaterialProperty({
+    color: Cesium.Color.CYAN,
+    duration: 3000,
+    trailImage: polylineMaterialImg,
+  })
+
+  /**
+   *
+   * @type {PolylineGeo}
+   */
+  let pyno = new PolylineGeo(useEarth())
+  let { positions, colors } = genRandomLine(120, 32, 20)
+  pyno.addLine({
+    positions: positions,
+    color: Cesium.Color.RED,
+  })
+
+  // let earth = useEarth()
+  // earth.viewer.entities.add({
+  //   polyline: {
+  //     positions: positions,
+  //     width: 2,
+  //     material: material,
+  //   },
+  // })
+
+
+}
+
 function rePolyline() {
   polyline.removeAll()
 }
@@ -278,6 +324,7 @@ function addPolylineGeo() {
     colors: colors,
     arcType: Cesium.ArcType.NONE,
     colorsPerVertex: true,
+
   })
 }
 
@@ -322,6 +369,7 @@ function addleftEvent1(data) {
     <button @click="addPolyline2">轮廓线</button>
     <button @click="addPolyline3">箭头线</button>
     <button @click="addPolyline4">虚线</button>
+    <button @click="addPolyline5">轨迹线</button>
     <button @click="rePolyline">移除线条</button>
     <button @click="addPolylineGeo">添加线图元</button>
 

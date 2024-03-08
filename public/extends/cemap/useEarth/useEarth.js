@@ -14,10 +14,10 @@ function useEarth(id, option) {
 }
 
 /**
- *
- * @param _this1
- * @param _this2
- * @returns 返回当前this
+ * 返回当前this
+ * @param [_this1]
+ * @param [_this2]
+ * @returns {Earth|Object}
  * @constructor
  */
 let This = function (_this1, _this2) {
@@ -40,14 +40,13 @@ let This = function (_this1, _this2) {
 
 /**
  * 相机飞行
- *
  * @param lon {number} 经度
  * @param lat {number} 纬度
- * @param alt {number} 高度
- * @param heading {number} 朝向
- * @param pitch {number} 俯仰
- * @param roll {number} 旋转
- * @param duration {number} 飞行时间
+ * @param [alt] {number} 高度
+ * @param [heading] {number} 朝向
+ * @param [pitch] {number} 俯仰
+ * @param [roll] {number} 旋转
+ * @param [duration] {number} 飞行时间
  */
 function cameraFlyTo(lon,lat,alt = 1000000,heading = 0,pitch = -90,roll = 0,duration = 1.5) {
 

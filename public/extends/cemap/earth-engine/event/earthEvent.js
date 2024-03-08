@@ -12,20 +12,28 @@ var EarthEvent = (function () {
             let eventName = modules + "-left"
             if (!this.eventCache[eventName]) {
                 if (!callback) return console.warn("回调函数不存在！！")
-                if (typeof callback !== 'function') return console.warn("回调函数参数不是函数！！")
+                if ('function' !== typeof callback) return console.warn("回调函数参数不是函数！！")
                 this.eventCache[eventName] = {
                     callback: callback,
+                    modules: modules,
                 }
                 this.handler.setInputAction((event) => {
                     let transform = screenPositionTransform(event.position, this.earth)
                     // 如果点击到了实体，并且实体有设置模块
                     let callback_event
-                    if (transform.feature && transform.modules) {
+                    // 目标模块
+                    let _modules
+                    if (transform.target && transform.modules) {
                         // 使用实体模块的缓存事件
+                        _modules = transform.modules
                         callback_event = this.eventCache[transform.modules + "-left"]
-                    }  else {
+                    }
+                    if (!callback_event) {
                         // 不然使用传入模块的事件
                         callback_event = this.eventCache[modules + "-left"]
+                    }
+                    if (transform.target && callback_event.modules !== _modules) {
+                        console.warn("点击了目标，但是事件模块【" + modules + "】和目标模块【" + _modules + "】不一致")
                     }
                     callback_event.callback.call(this, transform)
                 }, Cesium.ScreenSpaceEventType.LEFT_CLICK)

@@ -1,6 +1,7 @@
 import {Cartesian3, Color, Polyline, PolylineCollection, Viewer} from "cesium";
 export class PolylineLayer {
     polylines: PolylineCollection;
+
     caches: Object;
 
     addPolyline(_data: {
