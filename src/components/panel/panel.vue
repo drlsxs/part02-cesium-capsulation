@@ -1,21 +1,20 @@
 <script setup>
-import { cameraFlyTo, useEarth } from "@p/extends/cemap/useEarth/useEarth.js";
 import plane2 from "@p/models/plane2.png"
 import monitor from "@p/models/monitor.png"
+import lineImage from "@p/extends/cemap/assets/images/polylinematerial/polylinemigrate.png"
+import { cameraFlyTo, useEarth } from "@p/extends/cemap/useEarth/useEarth.js";
 import Layer from '@p/extends/cemap/earth-engine/layer/layer.js'
 import Terrain from '@p/extends/cemap/earth-engine/layer/terrain.js'
 import { generatePosition } from '@p/extends/cemap/utils/utilIndex.js'
 import { onMounted } from 'vue'
-import PolylineLayer from '@p/extends/cemap/earth-engine/base/polyline.js'
 import PointLayer from '@p/extends/cemap/earth-engine/base/point.js'
 import SimpleLayer from '@p/extends/cemap/earth-engine/base/simple.js'
 import LabelLayer from '@p/extends/cemap/earth-engine/base/label.js'
 import BillboardLayer from '@p/extends/cemap/earth-engine/base/billboard.js'
-import { genLineStr, genRandomLine } from '@p/extends/cemap/utils/line.js'
-import PolylineGeo from '@p/extends/cemap/earth-engine/geometry/PolylineGeo.js'
+import { genRandomLine } from '@p/extends/cemap/utils/line.js'
+import PolylineLayer from '@p/extends/cemap/earth-engine/geometry/Polyline.js'
 import EarthEvent from '@p/extends/cemap/earth-engine/event/earthEvent.js'
-import PolylineTrailMaterialProperty from '@p/extends/cemap/earth-engine/material/polylineTrain.js'
-import polylineMaterialImg from "@p/extends/cemap/assets/images/polylinematerial/polylinemigrate.png"
+
 
 
 /**
@@ -54,9 +53,6 @@ onMounted(() => {
   event = new EarthEvent(useEarth())
   event.onClick("aa", addleftEvent1)
   event.onClick("cc", addleftEvent)
-  // 材质
-
-
   let layer = new Layer(useEarth())
   layer.addTdtImgImgLayer()
   cameraFlyTo(106, 30,9000000)
@@ -271,39 +267,22 @@ function addPolyline4() {
 
 function addPolyline5() {
 
+  const { positions } = genRandomLine(120, 32, 200000)
 
-  // polyline.addPolyline({
-  //   positions: positions,
-  //   width: 2,
-  //   type: "PolylineTrail",
-  //   color: Cesium.Color.CYAN,
-  // })
-
-  let material = new PolylineTrailMaterialProperty({
-    color: Cesium.Color.CYAN,
-    duration: 3000,
-    trailImage: polylineMaterialImg,
-  })
-
-  /**
-   *
-   * @type {PolylineGeo}
-   */
-  let pyno = new PolylineGeo(useEarth())
-  let { positions, colors } = genRandomLine(120, 32, 20)
-  pyno.addLine({
+  polyline.addPolyline({
+    id: "line5",
     positions: positions,
-    color: Cesium.Color.RED,
+    width: 2,
+    type: "PolylineTrail",
+    color: Cesium.Color.CYAN,
+    uniforms: {
+      image: lineImage,
+    },
+    modules: "aa",
+
   })
 
-  // let earth = useEarth()
-  // earth.viewer.entities.add({
-  //   polyline: {
-  //     positions: positions,
-  //     width: 2,
-  //     material: material,
-  //   },
-  // })
+
 
 
 }
@@ -312,21 +291,6 @@ function rePolyline() {
   polyline.removeAll()
 }
 
-function addPolylineGeo() {
-  /**
-   *
-   * @type {PolylineGeo}
-   */
-  let pyno = new PolylineGeo(useEarth())
-  let { positions, colors } = genRandomLine(120, 32)
-  pyno.addLine({
-    positions: positions,
-    colors: colors,
-    arcType: Cesium.ArcType.NONE,
-    colorsPerVertex: true,
-
-  })
-}
 
 function addleftEvent(data) {
   console.log(data,0)
@@ -371,7 +335,6 @@ function addleftEvent1(data) {
     <button @click="addPolyline4">虚线</button>
     <button @click="addPolyline5">轨迹线</button>
     <button @click="rePolyline">移除线条</button>
-    <button @click="addPolylineGeo">添加线图元</button>
 
     <br>
 

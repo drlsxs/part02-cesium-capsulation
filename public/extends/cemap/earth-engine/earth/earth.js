@@ -6,7 +6,7 @@
  * @license IMT
  */
 const { Viewer } = window.Cesium;
-import initAllUtils from '@p/extends/cemap/utils/initUtilsIndex.js'
+import initAll from '@p/extends/cemap/utils/initUtilsIndex.js'
 
 
 var Earth = (function () {
@@ -30,7 +30,7 @@ var Earth = (function () {
         // 配置属性
         configureProperties.call(this);
         // 初始化工具
-        initAllUtils.call(this)
+        initAll.call(this)
     }
 
     Earth.instances = {};

@@ -6,9 +6,9 @@
  * @license IMT
  */
 import { encodeId, getModule } from '@p/extends/cemap/utils/utilIndex.js'
-import Base from '@p/extends/cemap/earth-engine/base/base.js'
+import GeometryBase from '@p/extends/cemap/earth-engine/geometry/GeometryBase.js'
 
-var BillboardLayer = /**class*/(function (Super) {
+var BillboardLayer = /**class*/(function () {
     function BillboardLayer(earth) {
         this.billboards = earth.scene.primitives.add(new Cesium.BillboardCollection({scene:earth.scene}))
         this.caches = {}
@@ -81,6 +81,6 @@ var BillboardLayer = /**class*/(function (Super) {
 
 
 
-})(Base)
+})()
 
 export default BillboardLayer

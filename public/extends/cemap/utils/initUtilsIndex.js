@@ -1,7 +1,8 @@
 import { cameraFlyTo } from '@p/extends/cemap/useEarth/useEarth.js'
+import "@p/extends/cemap/earth-engine/material/materialIndex.js"
 
-function initAllUtils() {
+function initAll() {
     this.cameraFlyTo = cameraFlyTo
 }
 
-export default initAllUtils
+export default initAll
