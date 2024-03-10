@@ -13,9 +13,6 @@ import { cameraFlyTo, setView } from '@p/extends/cemap/use/useEarth.js'
 import { InitViewMode } from '@p/extends/cemap/earth-engine/config/earth/types.js'
 import { Object_assign } from '@p/extends/cemap/utils/utilIndex.js'
 import lodash from "lodash"
-
-let earth = null
-
 var Earth = (function () {
     /**
      * 地球构造器，初始化
@@ -40,6 +37,8 @@ var Earth = (function () {
         Earth.instances[this.id] = this;
     }
 
+    Earth.instances = {};
+
     function configureProperties() {
         Object.defineProperties(this, {
             id: {
@@ -51,16 +50,11 @@ var Earth = (function () {
 
     function initEarth() {
         // 获取合并配置
-        // TODO 暂时解决保存时会出现多个地球的问题
-        let dom  = document.getElementsByClassName("cesium-viewer")
-        dom = Array.from(dom)
-        dom.map(i => i.remove())
         /**
          * @type {EarthConfig}
          */
         let options = this.mergeOptions()
         this.viewer = new Viewer(this.options?.el || "cesiumContainer", options)
-        earth = this
         this.scene = this.viewer.scene;
         this.primitives = this.scene.primitives
         // 初始化地球参数
@@ -147,9 +141,6 @@ var Earth = (function () {
     }
 
 
-
-
-    Earth.instances = {};
 
 
     /**
