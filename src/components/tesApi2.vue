@@ -2,11 +2,15 @@
 import {onMounted} from "vue";
 import {useEarth} from "@p/extends/cemap/use/useEarth.js";
 import Panel2 from "@c/panel/panel2.vue";
+import Layer from '@p/extends/cemap/earth-engine/layer/layer.js'
 
 onMounted(() => {
   const earth = useEarth("id2",{
     el: "cesiumContainer2",
   });
+  const layer = new Layer(useEarth("id2"))
+  layer.addGdImgImgLayer()
+
 });
 </script>
 

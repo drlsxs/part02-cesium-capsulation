@@ -5,12 +5,7 @@ import plane from "@p/models/plane.png"
 
 // 画普通点
 const handlefly = () => {
-  // cameraFlyTo({
-  //   longitude: 116.39,
-  //   latitude: 39.9,
-  //   height: 1000000,
-  //   duration: 1
-  // })
+  useEarth("id2").cameraFlyTo(120, 30)
 }
 
 // 画普通点

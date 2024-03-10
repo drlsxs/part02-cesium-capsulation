@@ -13,6 +13,7 @@ import BillboardLayer from '@p/extends/cemap/earth-engine/base/billboard.js'
 import { genLineStr, genRandomLine } from '@p/extends/cemap/utils/line.js'
 import PolylineLayer from '@p/extends/cemap/earth-engine/geometry/Polyline.js'
 import EarthEvent from '@p/extends/cemap/earth-engine/event/earthEvent.js'
+import Assets from '@p/extends/cemap/earth-engine/config/assets/assetsIndex.js'
 
 /**
  * @type{BillboardLayer}
@@ -55,7 +56,7 @@ onMounted(() => {
 
 // 画普通点
 function handlefly() {
-  cameraFlyTo(116, 39)
+   useEarth().cameraFlyTo(116, 39)
 }
 
 // 画普通点
@@ -251,6 +252,10 @@ function addPolyline5() {
     positions: positions,
     type: "PolylineTrail",
     color: Cesium.Color.YELLOW,
+    uniforms: {
+      speed: 5,
+      image: Assets.Image + "polylinematerial/arrow.png",
+    },
   })
 
 }

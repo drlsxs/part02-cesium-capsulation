@@ -95,6 +95,8 @@ function Object_assign (target, ...sources) {
     return target
 }
 
+
+
 export {
     generatePosition,
     genUUid,
