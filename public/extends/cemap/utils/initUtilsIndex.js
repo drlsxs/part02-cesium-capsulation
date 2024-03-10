@@ -1,4 +1,4 @@
-import { cameraFlyTo, setView } from '@p/extends/cemap/useEarth/useEarth.js'
+import { cameraFlyTo, setView } from '@p/extends/cemap/use/useEarth.js'
 import "@p/extends/cemap/earth-engine/material/materialIndex.js"
 
 function initAll() {

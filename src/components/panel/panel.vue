@@ -1,8 +1,7 @@
 <script setup>
 import plane2 from "@p/models/plane2.png"
 import monitor from "@p/models/monitor.png"
-import lineImage from "@p/extends/cemap/assets/images/polylinematerial/polylinemigrate.png"
-import { cameraFlyTo, useEarth } from "@p/extends/cemap/useEarth/useEarth.js";
+import { cameraFlyTo, useEarth } from "@p/extends/cemap/use/useEarth.js";
 import Layer from '@p/extends/cemap/earth-engine/layer/layer.js'
 import Terrain from '@p/extends/cemap/earth-engine/layer/terrain.js'
 import { generatePosition } from '@p/extends/cemap/utils/utilIndex.js'
@@ -11,11 +10,9 @@ import PointLayer from '@p/extends/cemap/earth-engine/base/point.js'
 import SimpleLayer from '@p/extends/cemap/earth-engine/base/simple.js'
 import LabelLayer from '@p/extends/cemap/earth-engine/base/label.js'
 import BillboardLayer from '@p/extends/cemap/earth-engine/base/billboard.js'
-import { genRandomLine } from '@p/extends/cemap/utils/line.js'
+import { genLineStr, genRandomLine } from '@p/extends/cemap/utils/line.js'
 import PolylineLayer from '@p/extends/cemap/earth-engine/geometry/Polyline.js'
 import EarthEvent from '@p/extends/cemap/earth-engine/event/earthEvent.js'
-
-
 
 /**
  * @type{BillboardLayer}
@@ -43,11 +40,8 @@ let polyline
  */
 let event
 
-
 onMounted(() => {
-  bills = new BillboardLayer(useEarth("",{
-
-  }))
+  bills = new BillboardLayer(useEarth())
   labels = new LabelLayer(useEarth())
   simple = new SimpleLayer(useEarth())
   point = new PointLayer(useEarth())
@@ -66,7 +60,7 @@ function handlefly() {
 
 // 画普通点
 function drawSimple() {
-  let a =  simple.addSimple({
+  let a = simple.addSimple({
     id: "111",
     color: Cesium.Color.RED,
     image: plane2,
@@ -125,8 +119,6 @@ function addPoint() {
   })
 }
 
-
-
 function addPoint1() {
 
   let pos = generatePosition(120, 30, 6)
@@ -141,7 +133,6 @@ function addPoint1() {
 
   })
 
-
   let pos1 = generatePosition(120, 30, 6)
   pos1.map(po => {
     bills.addBillboard({
@@ -152,7 +143,6 @@ function addPoint1() {
       modules: "bb",
     })
   })
-
 
 }
 
@@ -198,25 +188,21 @@ function reTerrain() {
   terrain.remove()
 }
 
-
 function addPolyline() {
 
-  const { positions } = genRandomLine(120, 17, 0)
+  let positions = genLineStr("120.328,24.000;105.443,24.000")
 
   polyline.addPolyline({
     positions: positions,
-    width: 2,
     color: Cesium.Color.RED,
   })
 }
 
 function addPolyline1() {
-
-  const { positions } = genRandomLine(120, 20, 0)
+  let positions = genLineStr("120.328,26.000;105.443,26.000")
 
   polyline.addPolyline({
     positions: positions,
-    width: 2,
     type: "PolylineGlow",
     color: Cesium.Color.CORNFLOWERBLUE,
     uniforms: {
@@ -228,11 +214,10 @@ function addPolyline1() {
 
 function addPolyline2() {
 
-  const { positions } = genRandomLine(120, 23, 200000)
+  let positions = genLineStr("120.328,28.000;105.443,28.000")
 
   polyline.addPolyline({
     positions: positions,
-    width: 2,
     type: "PolylineOutline",
     color: Cesium.Color.ORANGE,
     uniforms: {
@@ -243,42 +228,30 @@ function addPolyline2() {
 }
 
 function addPolyline3() {
-
-  const { positions } = genRandomLine(120, 26, 200000)
-
+  let positions = genLineStr("120.328,30.000;105.443,30.000")
   polyline.addPolyline({
     positions: positions,
-    width: 2,
     type: "PolylineArrow",
     color: Cesium.Color.PURPLE,
   })
 }
 
 function addPolyline4() {
-
-  const { positions } = genRandomLine(120, 29, 200000)
-
+  let positions = genLineStr("120.328,32.000;105.443,32.000")
   polyline.addPolyline({
     positions: positions,
-    width: 2,
     type: "PolylineDash",
     color: Cesium.Color.CYAN,
   })
 }
 
 function addPolyline5() {
-
-  const { positions } = genRandomLine(120, 32, 200000)
-
+  let positions = genLineStr("120.328,34.000;105.443,34.000")
   polyline.addPolyline({
     positions: positions,
-    width: 2,
     type: "PolylineTrail",
-    color: Cesium.Color.CYAN,
+    color: Cesium.Color.YELLOW,
   })
-
-
-
 
 }
 
@@ -286,16 +259,15 @@ function rePolyline() {
   polyline.removeAll()
 }
 
-
 function addleftEvent(data) {
-  console.log(data,0)
+  console.log(data, 0)
 
 }
+
 function addleftEvent1(data) {
-  console.log(data,1)
+  console.log(data, 1)
 
 }
-
 
 
 </script>

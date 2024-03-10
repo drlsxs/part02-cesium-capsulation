@@ -1,5 +1,5 @@
 <script setup>
-import { useEarth} from "@p/extends/cemap/useEarth/useEarth.js";
+import { useEarth} from "@p/extends/cemap/use/useEarth.js";
 import plane from "@p/models/plane.png"
 
 

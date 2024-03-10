@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted} from "vue";
-import {useEarth} from "@p/extends/cemap/useEarth/useEarth.js";
+import {useEarth} from "@p/extends/cemap/use/useEarth.js";
 import Panel2 from "@c/panel/panel2.vue";
 
 onMounted(() => {

@@ -30,6 +30,11 @@ var EarthConfig = (function () {
             },
             // 初始化视图模式
             initViewMode: InitViewMode.SetView,
+            //==========================场景配置==================================
+            // 深度地形检测
+            depthTestAgainstTerrain: false,
+            // 开启抗锯齿
+            fxaa: true,
         }
     }
     return EarthConfig

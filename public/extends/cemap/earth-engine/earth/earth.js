@@ -9,10 +9,12 @@ import EarthConfig from '@p/extends/cemap/earth-engine/config/earth/configIndex.
  */
 const { Viewer } = window.Cesium;
 import initAll from '@p/extends/cemap/utils/initUtilsIndex.js'
-import { cameraFlyTo, setView } from '@p/extends/cemap/useEarth/useEarth.js'
+import { cameraFlyTo, setView } from '@p/extends/cemap/use/useEarth.js'
 import { InitViewMode } from '@p/extends/cemap/earth-engine/config/earth/types.js'
 import { Object_assign } from '@p/extends/cemap/utils/utilIndex.js'
+import lodash from "lodash"
 
+let earth = null
 
 var Earth = (function () {
     /**
@@ -36,9 +38,6 @@ var Earth = (function () {
         configureProperties.call(this);
     }
 
-    Earth.instances = {};
-
-
     function configureProperties() {
         Object.defineProperties(this, {
             id: {
@@ -49,13 +48,18 @@ var Earth = (function () {
     }
 
     function initEarth() {
+        if (Earth.getInstance(this.id)) return Earth.getInstance(this.id)
         // 获取合并配置
+        /**
+         * @type {EarthConfig}
+         */
         let options = this.mergeOptions()
-        this.viewer = new Viewer(this.options.el || "cesiumContainer", options)
-        // 初始化地球参数
-        this.setEarthMergedOption(options)
+        this.viewer = new Viewer(options.el || "cesiumContainer", options)
+        earth = this
         this.scene = this.viewer.scene;
         this.primitives = this.scene.primitives
+        // 初始化地球参数
+        this.setEarthMergedOption(options)
         // 将地球实例缓存
         Earth.instances[this.id] = this;
     }
@@ -66,7 +70,7 @@ var Earth = (function () {
      */
     Earth.prototype.mergeOptions = function () {
         let defaultOptions = new EarthConfig()
-        let sources = JSON.parse(JSON.stringify(this.options))
+        let sources = lodash.cloneDeep(this.options)
         return Object_assign(defaultOptions, sources)
     }
 
@@ -114,6 +118,7 @@ var Earth = (function () {
      * @param options {EarthConfig}
      */
     Earth.prototype.setCamara = function (options) {
+
         // 相机配置
         let { defaultView, initViewMode } = options
         if (defaultView && defaultView.lon && defaultView.lat) {
@@ -132,12 +137,18 @@ var Earth = (function () {
      * @param options {EarthConfig}
      */
     Earth.prototype.setScene = function (options) {
-
+        // 地形检测
+        this.scene.globe.depthTestAgainstTerrain = options.depthTestAgainstTerrain
+        // 抗锯齿
+        this.scene.postProcessStages.fxaa.enabled = options.fxaa;
 
 
     }
 
 
+
+
+    Earth.instances = {};
 
 
     /**

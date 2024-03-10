@@ -84,6 +84,7 @@ function getModule(obj,modules) {
  * @returns {*}
  */
 function Object_assign (target, ...sources) {
+    if (!sources[0]) return target
     sources.forEach(source => {
         Object.keys(source).forEach(key => {
             const s_val = source[key]

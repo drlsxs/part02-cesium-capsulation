@@ -17,7 +17,7 @@ var PolylineLayer = (function () {
             color = _a.color,
             uniforms = _a.uniforms
 
-        //定义几何形状
+        // 定义几何形状
         var polyline = new Cesium.GeometryInstance({
             id: id,
             geometry: new Cesium.PolylineGeometry({
@@ -26,8 +26,7 @@ var PolylineLayer = (function () {
             }),
         });
 
-
-        //定义外观
+        // 定义外观
         var polylineAppearance = new Cesium.PolylineMaterialAppearance({
             material: Cesium.Material.fromType(type, Object.assign(
                 { color: color },
@@ -36,7 +35,7 @@ var PolylineLayer = (function () {
 
         })
 
-        //创建Primitive
+        // 创建Primitive
         var polylinePrimitive = new Cesium.Primitive({
             geometryInstances: polyline,
             appearance: polylineAppearance,
@@ -44,8 +43,6 @@ var PolylineLayer = (function () {
 
         GeometryBase.prototype.add.call(this, id, polylinePrimitive)
     }
-
-
 
     return PolylineLayer
 

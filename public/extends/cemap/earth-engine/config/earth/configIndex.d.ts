@@ -21,6 +21,9 @@ export interface EarthConfig {
         roll?: number,
     };
     initViewMode?: string;
+    depthTestAgainstTerrain: boolean;
+    fxaa: boolean;
+
 }
 
 

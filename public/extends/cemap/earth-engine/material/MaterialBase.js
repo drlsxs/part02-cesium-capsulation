@@ -20,15 +20,17 @@ var MaterialBase = (function () {
         result = Cesium.defaultValue(result, {})
         result.color = Cesium.Property.getValueOrUndefined(this._color, time)
         result.speed = this._speed
+        result.image = this._image
         return result
     }
 
     MaterialBase.prototype.equals = function (other) {
         return (
             this === other ||
-            (other instanceof this.instance  &&
+            (other instanceof this.instance &&
                 Cesium.Property.equals(this._speed, other._speed) &&
-                Cesium.Property.equals(this._color, other._color))
+                Cesium.Property.equals(this._color, other._color) &&
+                Cesium.Property.equals(this._image, other._image))
         )
     }
 
