@@ -77,12 +77,26 @@ function getModule(obj,modules) {
 
 }
 
+function Object_assign (target, ...sources) {
+    sources.forEach(source => {
+        Object.keys(source).forEach(key => {
+            const s_val = source[key]
+            const t_val = target[key]
+            target[key] = typeof s_val === 'object'
+                ? Object_assign(t_val, s_val)
+                : s_val
+        })
+    })
+    return target
+}
+
 export {
     generatePosition,
     genUUid,
     encodeId,
     decodeId,
-    getModule
+    getModule,
+    Object_assign
 }
 
 

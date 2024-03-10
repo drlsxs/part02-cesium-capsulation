@@ -1,5 +1,5 @@
 export interface EarthConfig {
-    el: string;
+    el?: string;
     animation?: boolean;
     baseLayerPicker?: boolean;
     fullscreenButton?: boolean;
@@ -12,17 +12,15 @@ export interface EarthConfig {
     navigationHelpButton?: boolean;
     navigationInstructionsInitiallyVisible?: boolean;
     automaticallyTrackDataSourceClocks?: boolean;
-    camera: {
-        defaultView: {
-            lon: number,
-            lat: number,
-            alt: number,
-            heading: number,
-            pitch: number,
-            roll: number,
-        };
-        initViewMode: string;
+    defaultView?: {
+        lon?: number,
+        lat?: number,
+        alt?: number,
+        heading?: number,
+        pitch?: number,
+        roll?: number,
     };
+    initViewMode?: string;
 }
 
 declare function EarthConfig(): EarthConfig;

@@ -1,5 +1,5 @@
 import {PrimitiveCollection, Scene, Viewer} from "cesium";
-import {EarthConfig} from "../../useEarth/config/configIndex";
+import {EarthConfig} from "../config/earth/configIndex";
 export class Earth {
 
     viewer: Viewer;

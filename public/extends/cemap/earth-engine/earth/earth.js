@@ -1,4 +1,4 @@
-import EarthConfig from '@p/extends/cemap/useEarth/config/configIndex.js'
+import EarthConfig from '@p/extends/cemap/earth-engine/config/earth/configIndex.js'
 
 /**
  * @module Earth
@@ -10,7 +10,8 @@ import EarthConfig from '@p/extends/cemap/useEarth/config/configIndex.js'
 const { Viewer } = window.Cesium;
 import initAll from '@p/extends/cemap/utils/initUtilsIndex.js'
 import { cameraFlyTo, setView } from '@p/extends/cemap/useEarth/useEarth.js'
-import { InitViewMode } from '@p/extends/cemap/useEarth/config/types.js'
+import { InitViewMode } from '@p/extends/cemap/earth-engine/config/earth/types.js'
+import { Object_assign } from '@p/extends/cemap/utils/utilIndex.js'
 
 
 var Earth = (function () {
@@ -65,9 +66,11 @@ var Earth = (function () {
      */
     Earth.prototype.mergeOptions = function () {
         let defaultOptions = new EarthConfig()
-        Object.assign(defaultOptions, this.options)
-        return defaultOptions
+        let sources = JSON.parse(JSON.stringify(this.options))
+        return Object_assign(defaultOptions, sources)
     }
+
+
 
 
     /**
@@ -112,7 +115,7 @@ var Earth = (function () {
      */
     Earth.prototype.setCamara = function (options) {
         // 相机配置
-        let { defaultView, initViewMode } = options.camera
+        let { defaultView, initViewMode } = options
         if (defaultView && defaultView.lon && defaultView.lat) {
             let { lon, lat, alt, heading, pitch, roll } = defaultView
             // 如果是飞行

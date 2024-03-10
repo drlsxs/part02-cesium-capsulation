@@ -48,6 +48,11 @@ onMounted(() => {
   bills = new BillboardLayer(useEarth("",{
     infoBox: true,
     fullscreenButton: true,
+    defaultView: {
+      lon: 20,
+      lat: 40,
+
+    },
   }))
   labels = new LabelLayer(useEarth())
   simple = new SimpleLayer(useEarth())

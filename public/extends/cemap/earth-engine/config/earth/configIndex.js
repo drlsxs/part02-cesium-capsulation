@@ -1,4 +1,4 @@
-import { InitViewMode } from '@p/extends/cemap/useEarth/config/types.js'
+import { InitViewMode } from '@p/extends/cemap/earth-engine/config/earth/types.js'
 
 var EarthConfig = (function () {
     function EarthConfig() {
@@ -19,22 +19,19 @@ var EarthConfig = (function () {
             navigationInstructionsInitiallyVisible: false, // 不显示导航说明
             // 确保相机视角为纯地球视角，不包含其他元素
             automaticallyTrackDataSourceClocks: false,
-            // 相机配置
-            camera: {
-                defaultView: {
-                    lon: 106,
-                    lat: 30,
-                    alt: 9000000,
-                    heading:0,
-                    pitch: -90,
-                    roll: 0,
-                },
-                // 初始化视图模式
-                initViewMode: InitViewMode.SetView,
+            // =========================相机配置==================================
+            defaultView: {
+                lon: 106,
+                lat: 30,
+                alt: 9000000,
+                heading:0,
+                pitch: -90,
+                roll: 0,
             },
+            // 初始化视图模式
+            initViewMode: InitViewMode.SetView,
         }
     }
-
     return EarthConfig
 })()
 

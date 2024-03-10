@@ -1,5 +1,5 @@
 import Earth from "@p/extends/cemap/earth-engine/earth/earth.js";
-import EarthConfig from '@p/extends/cemap/useEarth/config/configIndex.js'
+import EarthConfig from '@p/extends/cemap/earth-engine/config/earth/configIndex.js'
 
 /**
  * 初始化地球实例
