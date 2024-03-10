@@ -77,14 +77,18 @@ function getModule(obj,modules) {
 
 }
 
+/**
+ * 解决合并对象属性会覆盖问题
+ * @param target
+ * @param sources
+ * @returns {*}
+ */
 function Object_assign (target, ...sources) {
     sources.forEach(source => {
         Object.keys(source).forEach(key => {
             const s_val = source[key]
             const t_val = target[key]
-            target[key] = typeof s_val === 'object'
-                ? Object_assign(t_val, s_val)
-                : s_val
+            target[key] = typeof s_val === 'object' ? Object_assign(t_val, s_val) : s_val
         })
     })
     return target

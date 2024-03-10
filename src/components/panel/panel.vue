@@ -46,13 +46,7 @@ let event
 
 onMounted(() => {
   bills = new BillboardLayer(useEarth("",{
-    infoBox: true,
-    fullscreenButton: true,
-    defaultView: {
-      lon: 20,
-      lat: 40,
 
-    },
   }))
   labels = new LabelLayer(useEarth())
   simple = new SimpleLayer(useEarth())
@@ -277,16 +271,10 @@ function addPolyline5() {
   const { positions } = genRandomLine(120, 32, 200000)
 
   polyline.addPolyline({
-    id: "line5",
     positions: positions,
     width: 2,
     type: "PolylineTrail",
     color: Cesium.Color.CYAN,
-    uniforms: {
-      image: lineImage,
-    },
-    modules: "aa",
-
   })
 
 

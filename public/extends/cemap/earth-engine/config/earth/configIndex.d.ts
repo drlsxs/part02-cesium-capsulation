@@ -23,5 +23,4 @@ export interface EarthConfig {
     initViewMode?: string;
 }
 
-declare function EarthConfig(): EarthConfig;
 
