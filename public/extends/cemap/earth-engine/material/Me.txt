@@ -1,0 +1,7 @@
+材质管理
+shaders 纹理
+shapes 几何体形状
+type 几何体设置材质到cesium
+MaterialBase 材质基础类
+materialIndex 材质导出
+MaterialType 材质类型名称
