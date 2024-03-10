@@ -1,4 +1,4 @@
-import { encodeId } from '@p/extends/cemap/utils/utilIndex.js'
+import { encodeId } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 
 var PointLayer = (function () {
     function PointLayer(earth) {

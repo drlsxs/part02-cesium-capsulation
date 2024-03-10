@@ -1,6 +1,6 @@
 import {Cartesian2,Cartographic,} from 'cesium'
 import Earth from '@p/extends/cemap/earth-engine/earth/earth.js'
-import { decodeId } from '@p/extends/cemap/utils/utilIndex.js'
+import { decodeId } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 
 /**
  *

@@ -1,4 +1,4 @@
-import { screenPositionTransform } from '@p/extends/cemap/utils/coordninate.js'
+import { screenPositionTransform } from '@p/extends/cemap/earth-engine/utils/coordninate.js'
 
 var EarthEvent = (function () {
     function EarthEvent(earth) {

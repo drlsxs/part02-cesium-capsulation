@@ -5,7 +5,7 @@
  * @version 1.0.0
  * @license IMT
  */
-import { encodeId, getModule } from '@p/extends/cemap/utils/utilIndex.js'
+import { encodeId, getModule } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 
 var BillboardLayer = /**class*/(function () {
     function BillboardLayer(earth) {

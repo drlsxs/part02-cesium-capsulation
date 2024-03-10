@@ -1,16 +1,16 @@
 <script setup>
 import plane2 from "@p/models/plane2.png"
 import monitor from "@p/models/monitor.png"
-import { cameraFlyTo, useEarth } from "@p/extends/cemap/use/useEarth.js";
+import {  useEarth } from "@p/extends/cemap/use/useEarth.js";
 import Layer from '@p/extends/cemap/earth-engine/layer/layer.js'
 import Terrain from '@p/extends/cemap/earth-engine/layer/terrain.js'
-import { generatePosition } from '@p/extends/cemap/utils/utilIndex.js'
+import { generatePosition } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 import { onMounted } from 'vue'
 import PointLayer from '@p/extends/cemap/earth-engine/base/point.js'
 import SimpleLayer from '@p/extends/cemap/earth-engine/base/simple.js'
 import LabelLayer from '@p/extends/cemap/earth-engine/base/label.js'
 import BillboardLayer from '@p/extends/cemap/earth-engine/base/billboard.js'
-import { genLineStr, genRandomLine } from '@p/extends/cemap/utils/line.js'
+import { genLineStr } from '@p/extends/cemap/earth-engine/utils/line.js'
 import PolylineLayer from '@p/extends/cemap/earth-engine/geometry/Polyline.js'
 import EarthEvent from '@p/extends/cemap/earth-engine/event/earthEvent.js'
 import Assets from '@p/extends/cemap/earth-engine/config/assets/assetsIndex.js'
@@ -246,17 +246,19 @@ function addPolyline4() {
   })
 }
 
+
 function addPolyline5() {
-  let positions = genLineStr("120.328,34.000;105.443,34.000")
   polyline.addPolyline({
-    positions: positions,
+    positions: genLineStr("107.3594,26.3970;107.4003,26.3970"),
     type: "PolylineTrail",
-    color: Cesium.Color.YELLOW,
+    width: 8,
     uniforms: {
-      speed: 5,
-      image: Assets.Image + "polylinematerial/arrow.png",
+      color: Cesium.Color.fromCssColorString("#00FFFF"),
+      speed: 3,
+      image: Assets.Image + "polylinematerial/LinkPulse.png",
     },
   })
+  useEarth().cameraFlyTo(107.3594, 26.3970)
 
 }
 

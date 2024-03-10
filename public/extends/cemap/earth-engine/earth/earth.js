@@ -8,10 +8,9 @@ import EarthConfig from '@p/extends/cemap/earth-engine/config/earth/configIndex.
  * @license IMT
  */
 const { Viewer } = window.Cesium;
-import initAll from '@p/extends/cemap/utils/initUtilsIndex.js'
-import { cameraFlyTo, setView } from '@p/extends/cemap/use/useEarth.js'
+import earthExtend from '@p/extends/cemap/earth-engine/earth/initUtilsIndex.js'
 import { InitViewMode } from '@p/extends/cemap/earth-engine/config/earth/types.js'
-import { Object_assign } from '@p/extends/cemap/utils/utilIndex.js'
+import { Object_assign } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 import lodash from "lodash"
 var Earth = (function () {
     /**
@@ -24,13 +23,12 @@ var Earth = (function () {
         // 视图
         this.viewer = void 0
         this.scene = void 0
+        this.camera = void 0
         this.primitives = void 0
         this.id = id || "default";
         this.options = options;
         // 初始化地图
-        initEarth.call(this);
-        // 初始化工具
-        initAll.call(this)
+        this.initEarth()
         // 配置属性
         configureProperties.call(this);
         // 将地球实例缓存
@@ -48,7 +46,7 @@ var Earth = (function () {
         });
     }
 
-    function initEarth() {
+    Earth.prototype.initEarth = function () {
         // 获取合并配置
         /**
          * @type {EarthConfig}
@@ -56,7 +54,10 @@ var Earth = (function () {
         let options = this.mergeOptions()
         this.viewer = new Viewer(this.options?.el || "cesiumContainer", options)
         this.scene = this.viewer.scene;
+        this.camera = this.viewer.camera
         this.primitives = this.scene.primitives
+        // 初始化工具
+        earthExtend.call(this)
         // 初始化地球参数
         this.setEarthMergedOption(options)
     }
@@ -115,16 +116,15 @@ var Earth = (function () {
      * @param options {EarthConfig}
      */
     Earth.prototype.setCamara = function (options) {
-
         // 相机配置
         let { defaultView, initViewMode } = options
         if (defaultView && defaultView.lon && defaultView.lat) {
             let { lon, lat, alt, heading, pitch, roll } = defaultView
             // 如果是飞行
             if (initViewMode === InitViewMode.Fly) {
-                cameraFlyTo.call(this, lon, lat, alt, heading, pitch, roll)
+                this.cameraFlyTo( lon, lat, alt, heading, pitch, roll)
             }else if (initViewMode === InitViewMode.SetView) {
-                setView.call(this, lon, lat, alt, heading, pitch, roll)
+                this.cameraSetView(lon, lat, alt, heading, pitch, roll)
             }
         }
     }

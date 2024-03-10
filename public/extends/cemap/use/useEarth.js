@@ -38,52 +38,7 @@ let This = function (_this1, _this2) {
 }
 
 
-/**
- * 相机飞行
- * @param lon {number} 经度
- * @param lat {number} 纬度
- * @param [alt] {number} 高度
- * @param [heading] {number} 朝向
- * @param [pitch] {number} 俯仰
- * @param [roll] {number} 旋转
- * @param [duration] {number} 飞行时间
- */
-function cameraFlyTo(lon,lat,alt = 9000000,heading = 0,pitch = -90,roll = 0,duration = 1.5) {
-
-    This(this).viewer.camera.flyTo({
-        // 位置
-        destination: Cesium.Cartesian3.fromDegrees(lon, lat, alt),
-        orientation: {
-            // 朝向
-            heading: Cesium.Math.toRadians(heading),
-            // 俯仰
-            pitch: Cesium.Math.toRadians(pitch),
-            // 旋转
-            roll: Cesium.Math.toRadians(roll),
-        },
-        // 时间
-        duration: duration,
-    });
-
-}
-
-function setView(lon, lat, alt = 9000000, heading = 0, pitch = -90, roll = 0) {
-    This(this).viewer.camera.setView({
-        destination: Cesium.Cartesian3.fromDegrees(lon, lat, alt),
-        orientation: {
-            // 朝向
-            heading: Cesium.Math.toRadians(heading),
-            // 俯仰
-            pitch: Cesium.Math.toRadians(pitch),
-            // 旋转
-            roll: Cesium.Math.toRadians(roll),
-        },
-    })
-}
-
 export {
     useEarth,
     This,
-    cameraFlyTo,
-    setView
 }

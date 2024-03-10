@@ -39,6 +39,11 @@ var GeometryBase = (function () {
         this.caches = {}
     }
 
+    GeometryBase.prototype.flyTo = function () {
+
+        this.earth.viewer.flyTo()
+    }
+
 
 
 
