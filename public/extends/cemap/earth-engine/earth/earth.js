@@ -144,8 +144,6 @@ var Earth = (function () {
         this.scene.globe.depthTestAgainstTerrain = options.depthTestAgainstTerrain
         // 抗锯齿
         this.scene.postProcessStages.fxaa.enabled = options.fxaa;
-
-
     }
 
 
