@@ -26,12 +26,14 @@ var PolylineLayer = (function () {
             }),
         });
 
+
         //定义外观
         var polylineAppearance = new Cesium.PolylineMaterialAppearance({
             material: Cesium.Material.fromType(type, Object.assign(
                 { color: color },
                 uniforms
             )),
+
         })
 
         //创建Primitive

@@ -45,7 +45,10 @@ let event
 
 
 onMounted(() => {
-  bills = new BillboardLayer(useEarth())
+  bills = new BillboardLayer(useEarth("",{
+    infoBox: true,
+    fullscreenButton: true,
+  }))
   labels = new LabelLayer(useEarth())
   simple = new SimpleLayer(useEarth())
   point = new PointLayer(useEarth())
@@ -55,7 +58,6 @@ onMounted(() => {
   event.onClick("cc", addleftEvent)
   let layer = new Layer(useEarth())
   layer.addTdtImgImgLayer()
-  cameraFlyTo(106, 30,9000000)
 })
 
 // 画普通点

@@ -1,3 +1,5 @@
+import EarthConfig from '@p/extends/cemap/useEarth/config/configIndex.js'
+
 /**
  * @module Earth
  * @description 地球构造器
@@ -7,6 +9,8 @@
  */
 const { Viewer } = window.Cesium;
 import initAll from '@p/extends/cemap/utils/initUtilsIndex.js'
+import { cameraFlyTo, setView } from '@p/extends/cemap/useEarth/useEarth.js'
+import { InitViewMode } from '@p/extends/cemap/useEarth/config/types.js'
 
 
 var Earth = (function () {
@@ -14,23 +18,21 @@ var Earth = (function () {
      * 地球构造器，初始化
      * @constructor
      * @param id{String} id
-     * @param options{Object} 参数
+     * @param options{EarthConfig} 参数
      */
     function Earth(id, options) {
         // 视图
         this.viewer = void 0
         this.scene = void 0
         this.primitives = void 0
-        this.id = id ? id : "default";
+        this.id = id || "default";
         this.options = options;
         // 初始化地图
         initEarth.call(this);
-        // 将地球实例缓存
-        Earth.instances[this.id] = this;
-        // 配置属性
-        configureProperties.call(this);
         // 初始化工具
         initAll.call(this)
+        // 配置属性
+        configureProperties.call(this);
     }
 
     Earth.instances = {};
@@ -46,31 +48,94 @@ var Earth = (function () {
     }
 
     function initEarth() {
-        var creditContainer = document.createElement('div');
-        this.viewer = new Viewer(this.options?.el || "cesiumContainer", {
-            // 隐藏和禁用各种默认控件和组件
-            animation: false, // 动画控制器
-            baseLayerPicker: false, // 底图选择器
-            fullscreenButton: false, // 全屏按钮
-            geocoder: false, // 地址搜索框
-            homeButton: false, // 家按钮（返回初始视图）
-            infoBox: false, // 信息框（鼠标悬停提示信息）
-            sceneModePicker: false, // 场景模式选择器（2D/3D/Columbus View）
-            selectionIndicator: false, // 选中对象指示器
-            timeline: false, // 时间线控制条
-            navigationHelpButton: false, // 导航帮助按钮
-            navigationInstructionsInitiallyVisible: false, // 不显示导航说明
-            // 确保相机视角为纯地球视角，不包含其他元素
-            automaticallyTrackDataSourceClocks: false,
-            // 移除Cesium Ion logo
-            creditContainer: creditContainer,
-            shouldAnimate: true,
-            // terrain: Cesium.Terrain.fromWorldTerrain(),
-        })
+        // 获取合并配置
+        let options = this.mergeOptions()
+        this.viewer = new Viewer(this.options.el || "cesiumContainer", options)
+        // 初始化地球参数
+        this.setEarthMergedOption(options)
         this.scene = this.viewer.scene;
         this.primitives = this.scene.primitives
+        // 将地球实例缓存
+        Earth.instances[this.id] = this;
+    }
+
+    /**
+     * 合并默认选项和自定义选项
+     * @returns{EarthConfig}
+     */
+    Earth.prototype.mergeOptions = function () {
+        let defaultOptions = new EarthConfig()
+        Object.assign(defaultOptions, this.options)
+        return defaultOptions
+    }
+
+
+    /**
+     * 设置合并后的选项
+     * @param options {EarthConfig}
+     */
+    Earth.prototype.setEarthMergedOption = function (options) {
+        this.setViewer(options)
+        this.setCamara(options)
+        this.setScene(options)
+    }
+
+    /**
+     * 设置viewer
+     * @param options {EarthConfig}
+     */
+    Earth.prototype.setViewer = function (options) {
+        // 隐藏时钟元素
+        if (options.animation) {
+            /**
+             * @type {HTMLElement}
+             */
+            let animationEl = this.viewer.animation.container
+            animationEl.style.visibility = "hidden"
+        }
+        // 隐藏时间线元素
+        if (options.timeline) {
+            /**
+             * @type {HTMLElement}
+             */
+            let timelineEl = this.viewer.timeline.container
+            timelineEl.style.visibility = "hidden"
+        }
+        // 隐藏版权信息
+        let creditContainer = this.viewer.creditDisplay.container
+        creditContainer.style.visibility = "hidden"
+    }
+
+    /**
+     * 设置相机
+     * @param options {EarthConfig}
+     */
+    Earth.prototype.setCamara = function (options) {
+        // 相机配置
+        let { defaultView, initViewMode } = options.camera
+        if (defaultView && defaultView.lon && defaultView.lat) {
+            let { lon, lat, alt, heading, pitch, roll } = defaultView
+            // 如果是飞行
+            if (initViewMode === InitViewMode.Fly) {
+                cameraFlyTo.call(this, lon, lat, alt, heading, pitch, roll)
+            }else if (initViewMode === InitViewMode.SetView) {
+                setView.call(this, lon, lat, alt, heading, pitch, roll)
+            }
+        }
+    }
+
+    /**
+     * 设置场景
+     * @param options {EarthConfig}
+     */
+    Earth.prototype.setScene = function (options) {
+
+
 
     }
+
+
+
 
     /**
      * 获取地球实例

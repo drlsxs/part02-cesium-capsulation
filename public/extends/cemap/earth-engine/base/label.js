@@ -7,8 +7,6 @@
  */
 import { encodeId } from '@p/extends/cemap/utils/utilIndex.js'
 
-const { Cartesian2 } = window.Cesium
-
 var LabelLayer = (function () {
     function LabelLayer(earth) {
         this.labels = earth.scene.primitives.add(new Cesium.LabelCollection())

@@ -6,7 +6,6 @@
  * @license IMT
  */
 import { encodeId, getModule } from '@p/extends/cemap/utils/utilIndex.js'
-import GeometryBase from '@p/extends/cemap/earth-engine/geometry/GeometryBase.js'
 
 var BillboardLayer = /**class*/(function () {
     function BillboardLayer(earth) {

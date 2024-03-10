@@ -1,10 +1,11 @@
 import Earth from "@p/extends/cemap/earth-engine/earth/earth.js";
+import EarthConfig from '@p/extends/cemap/useEarth/config/configIndex.js'
 
 /**
  * 初始化地球实例
  * @returns {Earth}
  * @param [id] {String} 地球实例Id
- * @param [option] {Object} 初始化参数
+ * @param [option] {EarthConfig} 初始化参数
  */
 function useEarth(id, option) {
     let earth = Earth.getInstance(id);
@@ -48,18 +49,18 @@ let This = function (_this1, _this2) {
  * @param [roll] {number} 旋转
  * @param [duration] {number} 飞行时间
  */
-function cameraFlyTo(lon,lat,alt = 1000000,heading = 0,pitch = -90,roll = 0,duration = 1.5) {
+function cameraFlyTo(lon,lat,alt = 9000000,heading = 0,pitch = -90,roll = 0,duration = 1.5) {
 
     This(this).viewer.camera.flyTo({
         // 位置
-        destination: window.Cesium.Cartesian3.fromDegrees(lon, lat, alt),
+        destination: Cesium.Cartesian3.fromDegrees(lon, lat, alt),
         orientation: {
             // 朝向
-            heading: window.Cesium.Math.toRadians(heading),
+            heading: Cesium.Math.toRadians(heading),
             // 俯仰
-            pitch: window.Cesium.Math.toRadians(pitch),
+            pitch: Cesium.Math.toRadians(pitch),
             // 旋转
-            roll: window.Cesium.Math.toRadians(roll),
+            roll: Cesium.Math.toRadians(roll),
         },
         // 时间
         duration: duration,
@@ -67,8 +68,23 @@ function cameraFlyTo(lon,lat,alt = 1000000,heading = 0,pitch = -90,roll = 0,dura
 
 }
 
+function setView(lon, lat, alt = 9000000, heading = 0, pitch = -90, roll = 0) {
+    This(this).viewer.camera.setView({
+        destination: Cesium.Cartesian3.fromDegrees(lon, lat, alt),
+        orientation: {
+            // 朝向
+            heading: Cesium.Math.toRadians(heading),
+            // 俯仰
+            pitch: Cesium.Math.toRadians(pitch),
+            // 旋转
+            roll: Cesium.Math.toRadians(roll),
+        },
+    })
+}
+
 export {
     useEarth,
+    This,
     cameraFlyTo,
-    This
+    setView
 }
