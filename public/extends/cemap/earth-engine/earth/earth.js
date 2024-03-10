@@ -51,29 +51,20 @@ var Earth = (function () {
 
     function initEarth() {
         // 获取合并配置
-
-        // let options = this.mergeOptions()
-        this.viewer = new Viewer(this.options?.el || "cesiumContainer", {
-            // 隐藏和禁用各种默认控件和组件
-            animation: true, // 动画控制器
-            baseLayerPicker: false, // 底图选择器
-            fullscreenButton: false, // 全屏按钮
-            geocoder: false, // 地址搜索框
-            homeButton: false, // 家按钮（返回初始视图）
-            infoBox: false, // 信息框（鼠标悬停提示信息）
-            sceneModePicker: false, // 场景模式选择器（2D/3D/Columbus View）
-            selectionIndicator: false, // 选中对象指示器
-            timeline: true, // 时间线控制条
-            navigationHelpButton: false, // 导航帮助按钮
-            navigationInstructionsInitiallyVisible: false, // 不显示导航说明
-            // 确保相机视角为纯地球视角，不包含其他元素
-            automaticallyTrackDataSourceClocks: false,
-        })
+        // TODO 暂时解决保存时会出现多个地球的问题
+        let dom  = document.getElementsByClassName("cesium-viewer")
+        dom = Array.from(dom)
+        dom.map(i => i.remove())
+        /**
+         * @type {EarthConfig}
+         */
+        let options = this.mergeOptions()
+        this.viewer = new Viewer(this.options?.el || "cesiumContainer", options)
         earth = this
         this.scene = this.viewer.scene;
         this.primitives = this.scene.primitives
         // 初始化地球参数
-        // this.setEarthMergedOption(options)
+        this.setEarthMergedOption(options)
     }
 
     /**
