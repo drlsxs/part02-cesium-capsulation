@@ -8,7 +8,7 @@ import EarthConfig from '@p/extends/cemap/earth-engine/config/earth/configIndex.
  * @license IMT
  */
 const { Viewer } = window.Cesium;
-import earthExtend from '@p/extends/cemap/earth-engine/earth/initUtilsIndex.js'
+import earthExtend from '@p/extends/cemap/earth-engine/earth/earthExtend.js'
 import { InitViewMode } from '@p/extends/cemap/earth-engine/config/earth/types.js'
 import { Object_assign } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 import lodash from "lodash"
