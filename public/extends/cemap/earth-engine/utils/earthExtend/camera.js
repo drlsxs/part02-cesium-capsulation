@@ -75,12 +75,10 @@ function cameraFlyBoundingSphere(boundingSphere, duration = 1.5, offset, complet
 
 
 function initCamera() {
-    this.cameraFlyTo = cameraFlyTo
-    this.cameraSetView = cameraSetView
-    this.cameraFlyBoundingSphere = cameraFlyBoundingSphere
+    Earth.prototype.cameraFlyTo = cameraFlyTo
+    Earth.prototype.cameraSetView = cameraSetView
+    Earth.prototype.cameraFlyBoundingSphere = cameraFlyBoundingSphere
 }
-
-
 
 
 export default initCamera

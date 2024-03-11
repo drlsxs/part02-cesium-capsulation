@@ -5,14 +5,20 @@
  * @version 1.0.0
  * @license IMT
  */
-import { encodeId, getModule } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
+import { encodeId, getModule, instanceManage } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 
 var BillboardLayer = /**class*/(function () {
-    function BillboardLayer(earth) {
+    /**
+     *
+     * @param earth{Earth}
+     * @param single
+     * @return BillboardLayer
+     */
+    function BillboardLayer(earth,single = false) {
         this.billboards = earth.scene.primitives.add(new Cesium.BillboardCollection({scene:earth.scene}))
         this.caches = {}
+        return instanceManage(BillboardLayer, earth.id, single, this)
     }
-
 
     BillboardLayer.prototype.addBillboard = function (_a) {
         let modules = _a.modules,

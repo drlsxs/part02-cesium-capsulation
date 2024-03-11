@@ -4,7 +4,7 @@ var EarthConfig = (function () {
     function EarthConfig() {
         return {
             // 挂载元素
-            el: "",
+            el: "cesiumContainer",
             // 隐藏和禁用各种默认控件和组件
             animation: true, // 动画控制器
             baseLayerPicker: false, // 底图选择器
@@ -35,6 +35,9 @@ var EarthConfig = (function () {
             depthTestAgainstTerrain: false,
             // 开启抗锯齿
             fxaa: true,
+            //===========================实例配置==================================
+            // 开启 所有封装的构造函数返回同一个实例 反之返回新实例
+            singleInstance: true,
         }
     }
     return EarthConfig

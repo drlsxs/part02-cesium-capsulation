@@ -48,50 +48,31 @@ var Earth = (function () {
 
     Earth.prototype.initEarth = function () {
         // 获取合并配置
-        /**
-         * @type {EarthConfig}
-         */
-        let options = this.mergeOptions()
-        this.viewer = new Viewer(this.options?.el || "cesiumContainer", options)
+        this.mergeOptions()
+        this.viewer = new Viewer(this.options.el, this.options)
         this.scene = this.viewer.scene;
         this.camera = this.viewer.camera
         this.primitives = this.scene.primitives
         // 初始化工具
         earthExtend.call(this)
         // 初始化地球参数
-        this.setEarthMergedOption(options)
+        this.setEarthMergedOption()
     }
 
-    /**
-     * 合并默认选项和自定义选项
-     * @returns{EarthConfig}
-     */
     Earth.prototype.mergeOptions = function () {
         let defaultOptions = new EarthConfig()
-        let sources = lodash.cloneDeep(this.options)
-        return Object_assign(defaultOptions, sources)
+        this.options = Object_assign(defaultOptions, this.options)
     }
 
-
-
-
-    /**
-     * 设置合并后的选项
-     * @param options {EarthConfig}
-     */
-    Earth.prototype.setEarthMergedOption = function (options) {
-        this.setViewer(options)
-        this.setCamara(options)
-        this.setScene(options)
+    Earth.prototype.setEarthMergedOption = function () {
+        this.setViewer()
+        this.setCamara()
+        this.setScene()
     }
 
-    /**
-     * 设置viewer
-     * @param options {EarthConfig}
-     */
-    Earth.prototype.setViewer = function (options) {
+    Earth.prototype.setViewer = function () {
         // 隐藏时钟元素
-        if (options.animation) {
+        if (this.options.animation) {
             /**
              * @type {HTMLElement}
              */
@@ -99,7 +80,7 @@ var Earth = (function () {
             animationEl.style.visibility = "hidden"
         }
         // 隐藏时间线元素
-        if (options.timeline) {
+        if (this.options.timeline) {
             /**
              * @type {HTMLElement}
              */
@@ -111,13 +92,9 @@ var Earth = (function () {
         creditContainer.style.visibility = "hidden"
     }
 
-    /**
-     * 设置相机
-     * @param options {EarthConfig}
-     */
-    Earth.prototype.setCamara = function (options) {
+    Earth.prototype.setCamara = function () {
         // 相机配置
-        let { defaultView, initViewMode } = options
+        let { defaultView, initViewMode } = this.options
         if (defaultView && defaultView.lon && defaultView.lat) {
             let { lon, lat, alt, heading, pitch, roll } = defaultView
             // 如果是飞行
@@ -129,19 +106,12 @@ var Earth = (function () {
         }
     }
 
-    /**
-     * 设置场景
-     * @param options {EarthConfig}
-     */
-    Earth.prototype.setScene = function (options) {
+    Earth.prototype.setScene = function () {
         // 地形检测
-        this.scene.globe.depthTestAgainstTerrain = options.depthTestAgainstTerrain
+        this.scene.globe.depthTestAgainstTerrain = this.options.depthTestAgainstTerrain
         // 抗锯齿
-        this.scene.postProcessStages.fxaa.enabled = options.fxaa;
+        this.scene.postProcessStages.fxaa.enabled = this.options.fxaa;
     }
-
-
-
 
     /**
      * 获取地球实例

@@ -14,7 +14,6 @@ var LabelLayer = (function () {
     }
 
     LabelLayer.prototype.addLabel = function (_a) {
-
         let modules = _a.modules,
             id = encodeId(modules, _a.id),
             text = _a.text,
@@ -44,7 +43,6 @@ var LabelLayer = (function () {
         if (textPosition === "BOTTOM" && height) {
             pixelOffset = new Cesium.Cartesian2(0, height + 10)
         }
-
         label.pixelOffset = pixelOffset
         label = Object.assign(label, _advanceParams)
         label = this.labels.add(label)

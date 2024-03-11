@@ -1,4 +1,5 @@
 const { Cartesian3 } = Cesium
+import lodash from 'lodash'
 /**
  * 生成随机位置
  * @param lon 经度
@@ -95,6 +96,39 @@ function Object_assign (target, ...sources) {
     return target
 }
 
+/**
+ * 实例控制工具函数
+ * @param Fun{Function}
+ * @param Id{string}
+ * @param single{Boolean}
+ * @param instance{Object}
+ * @returns {*}
+ */
+function instanceManage(Fun,Id,single,instance) {
+    if (!Fun.instances) {
+        Fun.instances = {}
+    }
+
+    Fun.getInstance = function () {
+        return Fun.instances[Id || "default"]
+    }
+    Fun.setInstance = function () {
+        Fun.instances[Id] = instance
+    }
+
+    if (single) {
+        if (Fun.getInstance()) {
+            return Fun.getInstance()
+        } else {
+            Fun.setInstance()
+        }
+    }
+
+
+
+}
+
+
 
 
 export {
@@ -103,7 +137,8 @@ export {
     encodeId,
     decodeId,
     getModule,
-    Object_assign
+    Object_assign,
+    instanceManage
 }
 
 

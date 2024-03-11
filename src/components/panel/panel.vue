@@ -42,7 +42,8 @@ let polyline
 let event
 
 onMounted(() => {
-  bills = new BillboardLayer(useEarth())
+  bills = new BillboardLayer(useEarth(), true)
+  addPoint()
   labels = new LabelLayer(useEarth())
   simple = new SimpleLayer(useEarth())
   point = new PointLayer(useEarth())
@@ -121,10 +122,10 @@ function addPoint() {
 }
 
 function addPoint1() {
-
+  let bills2 = new BillboardLayer(useEarth())
   let pos = generatePosition(120, 30, 6)
   pos.map(po => {
-    bills.addBillboard({
+    bills2.addBillboard({
       position: po,
       image: monitor,
       width: 30,
@@ -136,7 +137,7 @@ function addPoint1() {
 
   let pos1 = generatePosition(120, 30, 6)
   pos1.map(po => {
-    bills.addBillboard({
+    bills2.addBillboard({
       position: po,
       image: plane2,
       width: 30,
@@ -144,6 +145,9 @@ function addPoint1() {
       modules: "bb",
     })
   })
+
+  console.log(bills)
+  console.log(bills2)
 
 }
 
