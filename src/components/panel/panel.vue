@@ -14,6 +14,13 @@ import { genLineStr } from '@p/extends/cemap/earth-engine/utils/line.js'
 import PolylineLayer from '@p/extends/cemap/earth-engine/geometry/Polyline.js'
 import EarthEvent from '@p/extends/cemap/earth-engine/event/earthEvent.js'
 import Assets from '@p/extends/cemap/earth-engine/config/assets/assetsIndex.js'
+import DrawUtils from '@p/extends/cemap/earth-engine/utils/drawUtils/drawUtils.js'
+
+/**
+ * @type {DrawUtils}
+ *
+ */
+let drawUtil
 
 /**
  * @type{BillboardLayer}
@@ -41,6 +48,9 @@ let polyline
  */
 let event
 
+
+
+
 onMounted(() => {
   bills = new BillboardLayer(useEarth(), true)
   labels = new LabelLayer(useEarth())
@@ -49,12 +59,10 @@ onMounted(() => {
   polyline = new PolylineLayer(useEarth())
   event = new EarthEvent(useEarth())
   event.onLeftClick("aa", addleftEvent1)
-  event.onLeftClick("cc", addleftEvent)
-  event.onMouseMove("dd", (data) => {
-    console.log(data)
-  })
+  event.onLeftClick("default", addleftEvent)
   let layer = new Layer(useEarth())
   layer.addTdtImgImgLayer()
+  drawUtil = new DrawUtils(useEarth())
 })
 
 // 画普通点
@@ -272,6 +280,19 @@ function rePolyline() {
   polyline.removeAll()
 }
 
+function drawLine() {
+  drawUtil.drawPolyLine({
+    id: "drawline",
+    color: Cesium.Color.RED,
+    width: 2,
+    showPoint: true,
+  })
+}
+
+function deletLine() {
+  drawUtil.deletePolyLine("drawline")
+}
+
 function addleftEvent(data) {
   console.log(data, 0)
 
@@ -314,6 +335,8 @@ function addleftEvent1(data) {
     <button @click="addPolyline4">虚线</button>
     <button @click="addPolyline5">轨迹线</button>
     <button @click="rePolyline">移除线条</button>
+    <button @click="drawLine">绘制线</button>
+    <button @click="deletLine">删除绘制线</button>
 
     <br>
 

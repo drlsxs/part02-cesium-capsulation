@@ -1,6 +1,8 @@
 import {BillboardCollection, Cartesian3, Color, Billboard as CesiumBillboard } from "cesium";
 export class BillboardLayer  {
 
+
+
     billboards: BillboardCollection;
 
     addBillboard(_data: {

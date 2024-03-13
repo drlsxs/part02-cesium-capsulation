@@ -12,7 +12,11 @@ export class EarthEvent {
 
     onLeftClick(modules: string, callback: Function): void
 
+    onRightClick(modules: string, callback: Function): void
+
     onMouseMove(modules: string, callback: Function): void
+
+    destroy(): void
 
 
 

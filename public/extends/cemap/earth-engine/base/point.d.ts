@@ -13,4 +13,9 @@ export class PointLayer {
         outlineWidth?: number;
         show?: boolean;
     }): PointPrimitive
+
+    remove(id: string): void
+
+    removeAll(): void
+
 }
