@@ -43,14 +43,16 @@ let event
 
 onMounted(() => {
   bills = new BillboardLayer(useEarth(), true)
-  addPoint()
   labels = new LabelLayer(useEarth())
   simple = new SimpleLayer(useEarth())
   point = new PointLayer(useEarth())
   polyline = new PolylineLayer(useEarth())
   event = new EarthEvent(useEarth())
-  event.onClick("aa", addleftEvent1)
-  event.onClick("cc", addleftEvent)
+  event.onLeftClick("aa", addleftEvent1)
+  event.onLeftClick("cc", addleftEvent)
+  event.onMouseMove("dd", (data) => {
+    console.log(data)
+  })
   let layer = new Layer(useEarth())
   layer.addTdtImgImgLayer()
 })
@@ -262,7 +264,7 @@ function addPolyline5() {
       image: Assets.Image + "polylinematerial/LinkPulse.png",
     },
   })
-  useEarth().cameraFlyTo(107.3594, 26.3970)
+
 
 }
 
@@ -282,7 +284,6 @@ function addleftEvent1(data) {
 
 
 </script>
-
 <template>
   <div class="panel">
     <h1>Panel 1</h1>
@@ -318,7 +319,6 @@ function addleftEvent1(data) {
 
   </div>
 </template>
-
 <style scoped>
 .panel {
   h1 {
