@@ -12,6 +12,7 @@ export class Earth {
 
     id: string | number;
 
+
     // 参数
     options: EarthConfig;
 }

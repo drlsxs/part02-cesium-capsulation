@@ -12,6 +12,7 @@ import earthExtend from '@p/extends/cemap/earth-engine/earth/earthExtend.js'
 import { InitViewMode } from '@p/extends/cemap/earth-engine/config/earth/types.js'
 import { Object_assign } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 import lodash from "lodash"
+import Assets from '@p/extends/cemap/earth-engine/config/assets/assetsIndex.js'
 var Earth = (function () {
     /**
      * 地球构造器，初始化
@@ -27,6 +28,7 @@ var Earth = (function () {
         this.primitives = void 0
         this.id = id || "default";
         this.options = options;
+        this.widgetContainer = void 0
         // 初始化地图
         this.initEarth()
         // 配置属性
@@ -90,6 +92,18 @@ var Earth = (function () {
         // 隐藏版权信息
         let creditContainer = this.viewer.creditDisplay.container
         creditContainer.style.visibility = "hidden"
+        // 插入窗体容器
+        let widgetContainer = `<div class='${this.options.widgetClassName}'></div>`
+        this.viewer.container.insertAdjacentHTML("beforeend", widgetContainer)
+        // 引入css样式
+        if (!document.getElementById(this.options.linkId)) {
+            let cssLink = document.createElement("link")
+            cssLink.id = this.options.linkId
+            cssLink.rel = "stylesheet"
+            cssLink.type = "text/css"
+            cssLink.href = Assets.Css
+            document.head.append(cssLink)
+        }
     }
 
     Earth.prototype.setCamara = function () {

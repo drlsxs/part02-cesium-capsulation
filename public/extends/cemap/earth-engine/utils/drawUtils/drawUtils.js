@@ -2,18 +2,22 @@ import { encodeId } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 import EarthEvent from '@p/extends/cemap/earth-engine/event/earthEvent.js'
 import DrawType from '@p/extends/cemap/earth-engine/utils/drawUtils/drawType.js'
 import EntityUtils from '@p/extends/cemap/earth-engine/utils/entityUtils/entityUtils.js'
+import ToolTip from '@p/extends/cemap/earth-engine/earth/widgets/toolTip.js'
+import toolTip from '@p/extends/cemap/earth-engine/earth/widgets/toolTip.js'
 
 var DrawUtils = (function () {
 
     /**
      * @param earth {Earth}
+     * @param showTip{boolean} 显示提示
      * @return DrawUtils
      */
-    function DrawUtils(earth) {
+    function DrawUtils(earth,showTip) {
         this.earth = earth
         this.event = null
         this.drawed = {}
         this.entityUtil = new EntityUtils(this.earth)
+        this.toolTip = showTip ? new ToolTip(this.earth) : void 0
     }
 
     /**
@@ -29,6 +33,10 @@ var DrawUtils = (function () {
     }
 
     DrawUtils.prototype.drawPolyLine = function (options) {
+        if (this.toolTip) {
+            this.toolTip.message = "左键选择点位"
+            this.toolTip.showToolTip()
+        }
         return new Promise((resolve, reject) => {
             let {
                 id,
@@ -86,6 +94,9 @@ var DrawUtils = (function () {
                         positions[positions.length - 1] = data.cartesian3
                         coordinates[coordinates.length - 1] = data.coordinate
                     }
+                    if (this.toolTip) {
+                        this.toolTip.updateTipPosition(data.screenPosition.x, data.screenPosition.y)
+                    }
                 }
             })
             // 右键结束绘制
@@ -100,12 +111,19 @@ var DrawUtils = (function () {
                 })
                 this.drawed[id] = cache
                 this.event.destroy()
+                if (this.toolTip) {
+                    this.toolTip.remove()
+                }
                 resolve(cache)
             })
         })
     }
 
     DrawUtils.prototype.drawPolyGon = function (options) {
+        if (this.toolTip) {
+            this.toolTip.message = "左键选择点位"
+            this.toolTip.showToolTip()
+        }
         return new Promise((resolve, reject) => {
             let {
                 id,
@@ -150,6 +168,9 @@ var DrawUtils = (function () {
                         polygonHierarchy.positions.pop()
                         polygonHierarchy.positions.push(data.cartesian3)
                     }
+                    if (this.toolTip) {
+                        this.toolTip.updateTipPosition(data.screenPosition.x, data.screenPosition.y)
+                    }
                 }
             })
             // 右键结束绘制
@@ -164,6 +185,9 @@ var DrawUtils = (function () {
                 })
                 this.drawed[id] = cache
                 this.event.destroy()
+                if (this.toolTip) {
+                    this.toolTip.remove()
+                }
                 resolve(cache)
             })
         })

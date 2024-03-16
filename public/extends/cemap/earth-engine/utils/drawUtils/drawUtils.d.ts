@@ -1,8 +1,8 @@
 import {Earth} from "../../earth/earth";
 import {Cartesian3, Color, Entity} from "cesium";
-import {PointLayer} from "../../base/point";
 import {EarthEvent} from "../../event/earthEvent";
-import {PolylineLayer} from "../../geometry/Polyline";
+import {EntityUtils} from "../entityUtils/entityUtils";
+import {ToolTip} from "../../earth/widgets/toolTip";
 
 
 
@@ -23,6 +23,10 @@ export class DrawUtils {
     drawed: {
         [key: string]: DrawCache;
     };
+
+    entityUtil: EntityUtils;
+
+    toolTip: ToolTip;
 
 
     drawPolyLine(options: {

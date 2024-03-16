@@ -59,7 +59,7 @@ onMounted(() => {
   event.onLeftClick("default", addleftEvent)
   let layer = new Layer(useEarth())
   layer.addTdtImgImgLayer()
-  drawUtil = new DrawUtils(useEarth())
+  drawUtil = new DrawUtils(useEarth(), true)
 })
 
 // 画普通点

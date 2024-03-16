@@ -14,6 +14,9 @@ export interface EarthConfig {
     navigationInstructionsInitiallyVisible?: boolean, // 不显示导航说明
     // 确保相机视角为纯地球视角，不包含其他元素
     automaticallyTrackDataSourceClocks?: boolean,
+    // widget类名
+    widgetClassName: string;
+    linkId: string;
     // =========================相机配置==================================
     defaultView?: {
         lon?: number,

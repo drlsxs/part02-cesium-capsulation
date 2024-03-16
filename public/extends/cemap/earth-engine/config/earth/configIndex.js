@@ -19,6 +19,10 @@ var EarthConfig = (function () {
             navigationInstructionsInitiallyVisible: false, // 不显示导航说明
             // 确保相机视角为纯地球视角，不包含其他元素
             automaticallyTrackDataSourceClocks: false,
+            // 窗口类名
+            widgetClassName: "custom-cesium-widget",
+            // 样式文件id
+            linkId: "cemap",
             // =========================相机配置==================================
             defaultView: {
                 lon: 106,
