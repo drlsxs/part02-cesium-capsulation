@@ -13,6 +13,8 @@ function useEarth(id, option) {
     return earth;
 }
 
+
+
 /**
  * 返回当前this
  * @param [_this1]

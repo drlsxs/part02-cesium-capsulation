@@ -4,6 +4,7 @@ import DrawType from '@p/extends/cemap/earth-engine/utils/drawUtils/drawType.js'
 import EntityUtils from '@p/extends/cemap/earth-engine/utils/entityUtils/entityUtils.js'
 import ToolTip from '@p/extends/cemap/earth-engine/earth/widgets/toolTip.js'
 import toolTip from '@p/extends/cemap/earth-engine/earth/widgets/toolTip.js'
+import PointLayer from '@p/extends/cemap/earth-engine/base/point.js'
 
 var DrawUtils = (function () {
 
@@ -18,6 +19,7 @@ var DrawUtils = (function () {
         this.drawed = {}
         this.entityUtil = new EntityUtils(this.earth)
         this.toolTip = showTip ? new ToolTip(this.earth) : void 0
+        this.pointLayer = new PointLayer(this.earth)
     }
 
     /**
@@ -73,18 +75,16 @@ var DrawUtils = (function () {
                             return positions
                         }, false)
                     }
-                    if (showPoint) {
-                        let point = this.entityUtil.addEntity({
-                            position: data.cartesian3,
-                            point: {
-                                pixelSize: pointSize,
-                                color: pointColor,
-                                outlineColor: pointOutLineColor,
-                                outlineWidth: pointOutLineWith,
-                            },
-                        })
-                        points.push(point)
-                    }
+                    // if (showPoint) {
+                    //     let point = this.pointLayer.addPoint({
+                    //         position: data.cartesian3,
+                    //         pixelSize: pointSize,
+                    //         color: pointColor,
+                    //         outlineColor: pointOutLineColor,
+                    //         outlineWidth: pointOutLineWith,
+                    //     })
+                    //     points.push(point)
+                    // }
                 }
             })
             this.event.onMouseMove("default", (data) => {

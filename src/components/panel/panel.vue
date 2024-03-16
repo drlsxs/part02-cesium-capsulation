@@ -1,7 +1,8 @@
 <script setup>
+// @ts-check
 import plane2 from "@p/models/plane2.png"
 import monitor from "@p/models/monitor.png"
-import {  useEarth } from "@p/extends/cemap/use/useEarth.js";
+import { useEarth } from "@p/extends/cemap/use/useEarth.js";
 import Layer from '@p/extends/cemap/earth-engine/layer/layer.js'
 import Terrain from '@p/extends/cemap/earth-engine/layer/terrain.js'
 import { generatePosition } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
@@ -15,13 +16,13 @@ import PolylineLayer from '@p/extends/cemap/earth-engine/geometry/Polyline.js'
 import EarthEvent from '@p/extends/cemap/earth-engine/event/earthEvent.js'
 import Assets from '@p/extends/cemap/earth-engine/config/assets/assetsIndex.js'
 import DrawUtils from '@p/extends/cemap/earth-engine/utils/drawUtils/drawUtils.js'
+import PolygonLayer from '@p/extends/cemap/earth-engine/geometry/Polygon.js'
+
 
 /**
  * @type {DrawUtils}
- *
  */
 let drawUtil
-
 /**
  * @type{BillboardLayer}
  */
@@ -42,11 +43,13 @@ let point
  * @type{PolylineLayer}
  */
 let polyline
+/**
+ * @type {PolygonLayer}
+ *
+ */
+let polygon
 
-let event, res,res2
-
-
-
+let event, res, res2
 
 onMounted(() => {
   bills = new BillboardLayer(useEarth(), true)
@@ -54,9 +57,10 @@ onMounted(() => {
   simple = new SimpleLayer(useEarth())
   point = new PointLayer(useEarth())
   polyline = new PolylineLayer(useEarth())
+  polygon = new PolygonLayer(useEarth())
   event = new EarthEvent(useEarth())
-  event.onLeftClick("aa", addleftEvent1)
-  event.onLeftClick("default", addleftEvent)
+  // event.onLeftClick("aa", addleftEvent1)
+  // event.onLeftClick("default", addleftEvent)
   let layer = new Layer(useEarth())
   layer.addTdtImgImgLayer()
   drawUtil = new DrawUtils(useEarth(), true)
@@ -64,7 +68,7 @@ onMounted(() => {
 
 // 画普通点
 function handlefly() {
-   useEarth().cameraFlyTo(116, 39)
+  useEarth().cameraFlyTo(116, 39)
 }
 
 // 画普通点
@@ -257,7 +261,6 @@ function addPolyline4() {
   })
 }
 
-
 function addPolyline5() {
   polyline.addPolyline({
     positions: genLineStr("107.3594,26.3970;107.4003,26.3970"),
@@ -269,7 +272,6 @@ function addPolyline5() {
       image: Assets.Image + "polylinematerial/LinkPulse.png",
     },
   })
-
 
 }
 
@@ -288,7 +290,6 @@ async function drawLine() {
     pointOutLineWith: 1,
   })
 
-
 }
 
 function deletLine() {
@@ -306,6 +307,18 @@ async function drawpolyGon() {
 
 function deletpolyGon() {
   drawUtil.delete(res2)
+}
+
+function addSimplePolygon() {
+  polygon.addPolygon({
+    positions: generatePosition(120, 30, 4),
+    color: Cesium.Color.RED,
+    opacity: 0.6,
+  })
+}
+
+function delSimplePolygon() {
+  polygon.removeAll()
 }
 
 function addleftEvent(data) {
@@ -354,6 +367,8 @@ function addleftEvent1(data) {
     <button @click="deletLine">删除绘制线</button>
     <button @click="drawpolyGon">绘制面</button>
     <button @click="deletpolyGon">删除面</button>
+    <button @click="addSimplePolygon">普通面</button>
+    <button @click="delSimplePolygon">移除普通面</button>
 
     <br>
 

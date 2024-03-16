@@ -7,7 +7,6 @@ import { onMounted } from 'vue'
 let bills
 
 onMounted(() => {
-
 })
 
 
