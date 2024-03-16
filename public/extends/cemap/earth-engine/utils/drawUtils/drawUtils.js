@@ -1,68 +1,200 @@
 import { encodeId } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 import EarthEvent from '@p/extends/cemap/earth-engine/event/earthEvent.js'
-import PointLayer from '@p/extends/cemap/earth-engine/base/point.js'
 import DrawType from '@p/extends/cemap/earth-engine/utils/drawUtils/drawType.js'
+import EntityUtils from '@p/extends/cemap/earth-engine/utils/entityUtils/entityUtils.js'
 
 var DrawUtils = (function () {
 
     /**
      * @param earth {Earth}
      * @return DrawUtils
-     * @constructor
      */
     function DrawUtils(earth) {
         this.earth = earth
         this.event = null
-        this.caches = {}
+        this.drawed = {}
+        this.entityUtil = new EntityUtils(this.earth)
     }
 
+    /**
+     * @param options{DrawCache}
+     * @return DrawCache
+     */
+    function DrawCache(options) {
+        this.id = options.id
+        this.type = options.type
+        this.positions = options.positions
+        this.coordinates = options.coordinates
+        this.entities = options.entities
+    }
 
     DrawUtils.prototype.drawPolyLine = function (options) {
-        let { id, modules, color, width, showPoint, pointSize, pointColor, pointOutLineWith, pointOutLineColor, } = options
-        id = encodeId(modules, id)
-        color = color || Cesium.Color.RED
-        width = width || 2
-        pointSize = pointSize || width + 2
-        let positions = []
-        let pointLayer = new PointLayer(this.earth)
-        this.event = new EarthEvent(this.earth)
-        this.event.onLeftClick("default", (data) => {
-            if (data.cartesian3) {
-                positions.push(data.cartesian3)
-                if (showPoint) {
-                    let point = pointLayer.addPoint({
-                        position: data.cartesian3,
-                        color: pointColor || Cesium.Color.YELLOW,
-                        pixelSize: pointSize,
-                        outlineColor: pointOutLineColor,
-                        outlineWidth: pointOutLineWith,
-                    })
+        return new Promise((resolve, reject) => {
+            let {
+                id,
+                modules,
+                color = Cesium.Color.RED,
+                width = 2,
+                showPoint = false,
+                pointSize = 4,
+                pointColor = Cesium.Color.YELLOW,
+                pointOutLineWith = 0,
+                pointOutLineColor = Cesium.Color.WHITE,
+            } = options
+            id = encodeId(modules, id)
+            let positions = [], points = [], polyline, coordinates = [], cache
+            this.event = new EarthEvent(this.earth)
+            // 创建一个空的数组来存储线的坐标
+            this.event.onLeftClick("default", (data) => {
+                if (data.cartesian3) {
+                    if (positions.length === 0) {
+                        positions.push(data.cartesian3)
+                    }
+                    positions.push(data.cartesian3)
+                    coordinates.push(data.coordinate)
+                    if (!polyline) {
+                        polyline = this.entityUtil.addEntity({
+                            polyline: {
+                                positions: positions,
+                                width: width,
+                                clampToGround: true,
+                                material: color,
+                            },
+                        })
+                        polyline.polyline.positions = new Cesium.CallbackProperty(function () {
+                            return positions
+                        }, false)
+                    }
+                    if (showPoint) {
+                        let point = this.entityUtil.addEntity({
+                            position: data.cartesian3,
+                            point: {
+                                pixelSize: pointSize,
+                                color: pointColor,
+                                outlineColor: pointOutLineColor,
+                                outlineWidth: pointOutLineWith,
+                            },
+                        })
+                        points.push(point)
+                    }
                 }
-            }
+            })
+            this.event.onMouseMove("default", (data) => {
+                if (data.cartesian3) {
+                    // 第二个点形成线可以绘制线了
+                    if (positions.length > 0) {
+                        positions[positions.length - 1] = data.cartesian3
+                        coordinates[coordinates.length - 1] = data.coordinate
+                    }
+                }
+            })
+            // 右键结束绘制
+            this.event.onRightClick("default", (data) => {
+                positions.pop()
+                cache = new DrawCache({
+                    id: id,
+                    type: DrawType.Polyline,
+                    positions: positions,
+                    entities: [[polyline], points],
+                    coordinates: coordinates,
+                })
+                this.drawed[id] = cache
+                this.event.destroy()
+                resolve(cache)
+            })
         })
-
-        // 右键结束绘制
-        this.event.onRightClick("default", (data) => {
-            this.caches[id] = {
-                type: DrawType.Polyline,
-                positions: positions,
-                layer: pointLayer,
-            }
-            this.event.destroy()
-        })
-
     }
+
+    DrawUtils.prototype.drawPolyGon = function (options) {
+        return new Promise((resolve, reject) => {
+            let {
+                id,
+                modules,
+                color = Cesium.Color.RED,
+                opacity = 1,
+            } = options
+            id = encodeId(modules, id)
+            color = Cesium.Color.fromAlpha(color, opacity)
+            let positions = [], points = [], polygon,polyline, coordinates = [], cache,
+                polygonHierarchy = new Cesium.PolygonHierarchy()
+            this.event = new EarthEvent(this.earth)
+            // 创建一个空的数组来存储线的坐标
+            this.event.onLeftClick("default", (data) => {
+                if (data.cartesian3) {
+                    if (positions.length === 0) {
+                        positions.push(data.cartesian3)
+                        polygonHierarchy.positions.push(data.cartesian3)
+                    }
+                    positions.push(data.cartesian3)
+                    coordinates.push(data.coordinate)
+                    polygonHierarchy.positions.push(data.cartesian3)
+                    if (!polygon) {
+                        polygon = this.entityUtil.addEntity({
+                            polygon: {
+                                hierarchy: polygonHierarchy,
+                                material: color,
+                            },
+                        })
+                        polygon.polygon.hierarchy = new Cesium.CallbackProperty(function () {
+                            return polygonHierarchy
+                        }, false)
+                    }
+                }
+            })
+            this.event.onMouseMove("default", (data) => {
+                if (data.cartesian3) {
+                    // 第二个点形成线可以绘制线了
+                    if (positions.length > 0) {
+                        positions[positions.length - 1] = data.cartesian3
+                        coordinates[coordinates.length - 1] = data.coordinate
+                        polygonHierarchy.positions.pop()
+                        polygonHierarchy.positions.push(data.cartesian3)
+                    }
+                }
+            })
+            // 右键结束绘制
+            this.event.onRightClick("default", (data) => {
+                positions.pop()
+                cache = new DrawCache({
+                    id: id,
+                    type: DrawType.Polygon,
+                    positions: positions,
+                    entities: [[polygon]],
+                    coordinates: coordinates,
+                })
+                this.drawed[id] = cache
+                this.event.destroy()
+                resolve(cache)
+            })
+        })
+    }
+
+
+
 
     /**
      *
      * @param id{string}
      */
-    DrawUtils.prototype.deletePolyLine = function (id) {
-        let cache = this.caches[id]
+    DrawUtils.prototype.deleteById = function (id) {
+        let cache = this.drawed[id]
         if (cache) {
-            cache.layer.removeAll()
-            delete this.caches[id]
+            let { entities } = cache
+            entities.map(collection => {
+                collection.map(entity => {
+                    this.entityUtil.remove(entity)
+                })
+            })
+            delete this.drawed[id]
         }
+    }
+
+    /**
+     *
+     * @param drawed{DrawCache}
+     */
+    DrawUtils.prototype.delete = function (drawed) {
+        this.deleteById(drawed.id)
     }
 
     return DrawUtils

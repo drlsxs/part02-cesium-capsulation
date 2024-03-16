@@ -24,21 +24,16 @@ var EarthEvent = (function () {
                 }
                 this.handler.setInputAction((event) => {
                     let transform = screenPositionTransform(event.position, this.earth)
-                    // 如果点击到了实体，并且实体有设置模块
+                    // 回调事件
                     let callback_event
-                    // 目标模块
-                    let _modules
+                    // 如果点击到了实体，并且实体有设置模块
                     if (transform.target && transform.modules) {
                         // 使用实体模块的缓存事件
-                        _modules = transform.modules
                         callback_event = this.eventCache[transform.modules + "-left"]
                     }
                     if (!callback_event) {
                         // 不然使用传入模块的事件
                         callback_event = this.eventCache[modules + "-left"]
-                    }
-                    if (transform.target && callback_event.modules !== _modules) {
-                        console.warn("点击了目标，但是事件模块【" + modules + "】和目标模块【" + _modules + "】不一致")
                     }
                     callback_event.callback.call(this, transform)
                 }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
@@ -62,21 +57,16 @@ var EarthEvent = (function () {
                 }
                 this.handler.setInputAction((event) => {
                     let transform = screenPositionTransform(event.position, this.earth)
-                    // 如果点击到了实体，并且实体有设置模块
+                    // 回调事件
                     let callback_event
-                    // 目标模块
-                    let _modules
+                    // 如果点击到了实体，并且实体有设置模块
                     if (transform.target && transform.modules) {
                         // 使用实体模块的缓存事件
-                        _modules = transform.modules
                         callback_event = this.eventCache[transform.modules + "-right"]
                     }
                     if (!callback_event) {
                         // 不然使用传入模块的事件
                         callback_event = this.eventCache[modules + "-right"]
-                    }
-                    if (transform.target && callback_event.modules !== _modules) {
-                        console.warn("点击了目标，但是事件模块【" + modules + "】和目标模块【" + _modules + "】不一致")
                     }
                     callback_event.callback.call(this, transform)
                 }, Cesium.ScreenSpaceEventType.RIGHT_CLICK)
@@ -100,13 +90,11 @@ var EarthEvent = (function () {
                 }
                 this.handler.setInputAction((event) => {
                     let transform = screenPositionTransform(event.endPosition, this.earth)
-                    // 如果点击到了实体，并且实体有设置模块
+                    // 回调事件
                     let callback_event
-                    // 目标模块
-                    let _modules
+                    // 如果点击到了实体，并且实体有设置模块
                     if (transform.target && transform.modules) {
                         // 使用实体模块的缓存事件
-                        _modules = transform.modules
                         callback_event = this.eventCache[transform.modules + "-move"]
                     }
                     if (!callback_event) {

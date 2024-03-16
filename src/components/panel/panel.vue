@@ -43,10 +43,7 @@ let point
  */
 let polyline
 
-/**
- * @type{EarthEvent}
- */
-let event
+let event, res,res2
 
 
 
@@ -280,17 +277,35 @@ function rePolyline() {
   polyline.removeAll()
 }
 
-function drawLine() {
-  drawUtil.drawPolyLine({
-    id: "drawline",
-    color: Cesium.Color.RED,
+async function drawLine() {
+
+  res = await drawUtil.drawPolyLine({
+    color: Cesium.Color.GRAY,
     width: 2,
     showPoint: true,
+    pointColor: Cesium.Color.CYAN,
+    pointOutLineColor: Cesium.Color.WHITE,
+    pointOutLineWith: 1,
   })
+
+
 }
 
 function deletLine() {
-  drawUtil.deletePolyLine("drawline")
+  drawUtil.delete(res)
+}
+
+async function drawpolyGon() {
+  res2 = await drawUtil.drawPolyGon({
+    color: Cesium.Color.GRAY,
+    opacity: 0.8,
+  })
+  console.log(res2)
+
+}
+
+function deletpolyGon() {
+  drawUtil.delete(res2)
 }
 
 function addleftEvent(data) {
@@ -337,6 +352,8 @@ function addleftEvent1(data) {
     <button @click="rePolyline">移除线条</button>
     <button @click="drawLine">绘制线</button>
     <button @click="deletLine">删除绘制线</button>
+    <button @click="drawpolyGon">绘制面</button>
+    <button @click="deletpolyGon">删除面</button>
 
     <br>
 

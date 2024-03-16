@@ -40,8 +40,11 @@ var PolylineLayer = (function () {
             geometryInstances: polyline,
             appearance: polylineAppearance,
         });
+        polylinePrimitive.id = id
 
         GeometryBase.prototype.add.call(this, id, polylinePrimitive)
+
+        return polylinePrimitive
     }
 
     return PolylineLayer

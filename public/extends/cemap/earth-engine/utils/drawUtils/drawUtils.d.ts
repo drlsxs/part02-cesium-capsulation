@@ -1,12 +1,17 @@
 import {Earth} from "../../earth/earth";
-import {Cartesian3, Color} from "cesium";
+import {Cartesian3, Color, Entity} from "cesium";
 import {PointLayer} from "../../base/point";
 import {EarthEvent} from "../../event/earthEvent";
+import {PolylineLayer} from "../../geometry/Polyline";
+
+
 
 export class DrawCache {
+    id: string;
     type: string;
-    layer: PointLayer;
     positions: Array<Cartesian3>;
+    coordinates: Array<{lon:number,lat:number, alt: number;}>;
+    entities: Array<Array<Entity>>;
 }
 
 export class DrawUtils {
@@ -15,11 +20,12 @@ export class DrawUtils {
 
     event: EarthEvent;
 
-    caches: {
+    drawed: {
         [key: string]: DrawCache;
     };
 
-    drawPolyLine(_options: {
+
+    drawPolyLine(options: {
         id?: string,
         modules?: string;
         color?: Color;
@@ -29,9 +35,16 @@ export class DrawUtils {
         pointColor?: Color;
         pointOutLineWith?: number;
         pointOutLineColor?: Color;
-    }): void
+    }): Promise<DrawCache>
 
-    deletePolyLine(id: string): void
+    drawPolyGon(options: {
+        id?: string,
+        modules?: string;
+        color?: Color;
+        opacity: number;
+    }): Promise<DrawCache>
+
+    deleteById(id: string): void
 }
 
 

@@ -33,7 +33,8 @@ function screenPositionTransform(screenPosition,earth,modules) {
     let _target = earth.viewer.scene.pick(screenPosition)
     // 判断给定的对象是否未定义。
     if (Cesium.defined(_target)) {
-        let encodeId = decodeId(_target.id)
+        let newId = typeof _target.id === "string" ? _target.id : _target.id.id
+        let encodeId = decodeId(newId)
         id = encodeId.id
         _modules = encodeId.modules
         target = _target

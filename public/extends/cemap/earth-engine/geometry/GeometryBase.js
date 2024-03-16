@@ -34,6 +34,8 @@ var GeometryBase = (function () {
         }
     }
 
+
+
     GeometryBase.prototype.removeAll = function () {
         this.primitiveCollection.removeAll()
         this.caches = {}
