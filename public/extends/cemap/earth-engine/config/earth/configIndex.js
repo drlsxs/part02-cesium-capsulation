@@ -23,6 +23,8 @@ var EarthConfig = (function () {
             widgetClassName: "custom-cesium-widget",
             // 样式文件id
             linkId: "cemap",
+            // 在地图上的目标移入显示手形鼠标
+            showPointerAtTarget: true,
             // =========================相机配置==================================
             defaultView: {
                 lon: 106,

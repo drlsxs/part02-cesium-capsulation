@@ -11,8 +11,8 @@ const { Viewer } = window.Cesium;
 import earthExtend from '@p/extends/cemap/earth-engine/earth/earthExtend.js'
 import { InitViewMode } from '@p/extends/cemap/earth-engine/config/earth/types.js'
 import { Object_assign } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
-import lodash from "lodash"
 import Assets from '@p/extends/cemap/earth-engine/config/assets/assetsIndex.js'
+import EarthEvent from '@p/extends/cemap/earth-engine/event/earthEvent.js'
 var Earth = (function () {
     /**
      * 地球构造器，初始化
@@ -93,7 +93,7 @@ var Earth = (function () {
         let creditContainer = this.viewer.creditDisplay.container
         creditContainer.style.visibility = "hidden"
         // 插入窗体容器
-        let widgetContainer = `<div class='${this.options.widgetClassName}'></div>`
+        let widgetContainer = `<div class='${ this.options.widgetClassName }'></div>`
         this.viewer.container.insertAdjacentHTML("beforeend", widgetContainer)
         // 引入css样式
         if (!document.getElementById(this.options.linkId)) {
@@ -103,6 +103,17 @@ var Earth = (function () {
             cssLink.type = "text/css"
             cssLink.href = Assets.Css
             document.head.append(cssLink)
+        }
+        // 在地图上的目标移入显示手形鼠标
+        if (this.options.showPointerAtTarget) {
+            let event = new EarthEvent(this)
+            event.onMouseMove("default", (data) => {
+                if (data.target) {
+                    document.body.style.cursor = "pointer"
+                } else {
+                    document.body.style.cursor = "initial"
+                }
+            })
         }
     }
 

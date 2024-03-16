@@ -1,17 +1,15 @@
 <script setup>
-// @ts-check
 import plane2 from "@p/models/plane2.png"
 import monitor from "@p/models/monitor.png"
 import { useEarth } from "@p/extends/cemap/use/useEarth.js";
 import Layer from '@p/extends/cemap/earth-engine/layer/layer.js'
 import Terrain from '@p/extends/cemap/earth-engine/layer/terrain.js'
-import { generatePosition } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
+import { generatePosition, genLineStr } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 import { onMounted } from 'vue'
 import PointLayer from '@p/extends/cemap/earth-engine/base/point.js'
 import SimpleLayer from '@p/extends/cemap/earth-engine/base/simple.js'
 import LabelLayer from '@p/extends/cemap/earth-engine/base/label.js'
 import BillboardLayer from '@p/extends/cemap/earth-engine/base/billboard.js'
-import { genLineStr } from '@p/extends/cemap/earth-engine/utils/line.js'
 import PolylineLayer from '@p/extends/cemap/earth-engine/geometry/Polyline.js'
 import EarthEvent from '@p/extends/cemap/earth-engine/event/earthEvent.js'
 import Assets from '@p/extends/cemap/earth-engine/config/assets/assetsIndex.js'
@@ -133,10 +131,9 @@ function addPoint() {
 }
 
 function addPoint1() {
-  let bills2 = new BillboardLayer(useEarth())
   let pos = generatePosition(120, 30, 6)
   pos.map(po => {
-    bills2.addBillboard({
+    bills.addBillboard({
       position: po,
       image: monitor,
       width: 30,
@@ -148,7 +145,7 @@ function addPoint1() {
 
   let pos1 = generatePosition(120, 30, 6)
   pos1.map(po => {
-    bills2.addBillboard({
+    bills.addBillboard({
       position: po,
       image: plane2,
       width: 30,
@@ -157,8 +154,6 @@ function addPoint1() {
     })
   })
 
-  console.log(bills)
-  console.log(bills2)
 
 }
 
