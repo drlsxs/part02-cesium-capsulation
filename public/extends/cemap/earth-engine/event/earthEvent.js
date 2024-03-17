@@ -1,4 +1,6 @@
 import { screenPositionTransform } from '@p/extends/cemap/earth-engine/utils/coordninate.js'
+import EventType from '@p/extends/cemap/earth-engine/event/eventType.js'
+import lodash from "lodash"
 
 var EarthEvent = (function () {
     /**
@@ -14,7 +16,7 @@ var EarthEvent = (function () {
 
     EarthEvent.prototype.onLeftClick = function (modules,callback) {
         if (modules) {
-            let eventName = modules + "-left"
+            let eventName = modules + EventType.leftClick
             if (!this.eventCache[eventName]) {
                 if (!callback) return console.warn("回调函数不存在！！")
                 if ('function' !== typeof callback) return console.warn("回调函数参数不是函数！！")
@@ -29,11 +31,11 @@ var EarthEvent = (function () {
                     // 如果点击到了实体，并且实体有设置模块
                     if (transform.target && transform.modules) {
                         // 使用实体模块的缓存事件
-                        callback_event = this.eventCache[transform.modules + "-left"]
+                        callback_event = this.eventCache[transform.modules + EventType.leftClick]
                     }
                     if (!callback_event) {
                         // 不然使用传入模块的事件
-                        callback_event = this.eventCache[modules + "-left"]
+                        callback_event = this.eventCache[modules + EventType.leftClick]
                     }
                     callback_event.callback.call(this, transform)
                 }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
@@ -47,7 +49,7 @@ var EarthEvent = (function () {
 
     EarthEvent.prototype.onRightClick = function (modules,callback) {
         if (modules) {
-            let eventName = modules + "-right"
+            let eventName = modules + EventType.rightClick
             if (!this.eventCache[eventName]) {
                 if (!callback) return console.warn("回调函数不存在！！")
                 if ('function' !== typeof callback) return console.warn("回调函数参数不是函数！！")
@@ -62,11 +64,11 @@ var EarthEvent = (function () {
                     // 如果点击到了实体，并且实体有设置模块
                     if (transform.target && transform.modules) {
                         // 使用实体模块的缓存事件
-                        callback_event = this.eventCache[transform.modules + "-right"]
+                        callback_event = this.eventCache[transform.modules + EventType.rightClick]
                     }
                     if (!callback_event) {
                         // 不然使用传入模块的事件
-                        callback_event = this.eventCache[modules + "-right"]
+                        callback_event = this.eventCache[modules + EventType.rightClick]
                     }
                     callback_event.callback.call(this, transform)
                 }, Cesium.ScreenSpaceEventType.RIGHT_CLICK)
@@ -80,7 +82,7 @@ var EarthEvent = (function () {
 
     EarthEvent.prototype.onMouseMove = function (modules,callback) {
         if (modules) {
-            let eventName = modules + "-move"
+            let eventName = modules + EventType.mouseMove
             if (!this.eventCache[eventName]) {
                 if (!callback) return console.warn("回调函数不存在！！")
                 if ('function' !== typeof callback) return console.warn("回调函数参数不是函数！！")
@@ -95,11 +97,11 @@ var EarthEvent = (function () {
                     // 如果点击到了实体，并且实体有设置模块
                     if (transform.target && transform.modules) {
                         // 使用实体模块的缓存事件
-                        callback_event = this.eventCache[transform.modules + "-move"]
+                        callback_event = this.eventCache[transform.modules + EventType.mouseMove]
                     }
                     if (!callback_event) {
                         // 不然使用传入模块的事件
-                        callback_event = this.eventCache[modules + "-move"]
+                        callback_event = this.eventCache[modules + EventType.mouseMove]
                     }
                     callback_event.callback.call(this, transform)
                 }, Cesium.ScreenSpaceEventType.MOUSE_MOVE)
@@ -111,21 +113,77 @@ var EarthEvent = (function () {
         }
     }
 
+    EarthEvent.prototype.onPreRender = function (modules, listener) {
+        if (modules) {
+            let eventName = modules + EventType.preRender
+            if (!this.eventCache[eventName]) {
+                this.eventCache[eventName] = {
+                    callback: null,
+                    modules: modules,
+                    listener: listener,
+                }
+                this.earth.scene.preRender.addEventListener(listener)
+            } else {
+                console.warn("重复添加场景更新渲染事件")
+            }
+        } else {
+            console.warn("模块不能为空")
+        }
+    }
+
+
+    EarthEvent.prototype.preRenderHtml = function (modules, objectList, callback) {
+        let _this = this
+        function listener() {
+            if (Array.isArray(objectList) && objectList.length) {
+                objectList.forEach(item => {
+                    let position = lodash.cloneDeep(item.position)
+                    if (position instanceof Cesium.Cartesian3) {
+                        // 将笛卡尔坐标中的位置转换为canvas坐标。这通常用于将HTML元素放置在与场景中的对象相同的屏幕位置。
+                        position = _this.earth.scene.cartesianToCanvasCoordinates(position)
+                        item.screenPosition = position
+                        let domEl = document.getElementById(item.id)
+                        if (domEl) {
+                            domEl.style.left = item.screenPosition.x + "px"
+                            domEl.style.top = item.screenPosition.y + "px"
+                        }
+                    }
+                })
+            }
+            if (callback) callback.call(this, objectList)
+        }
+
+        this.onPreRender(modules, listener)
+    }
+
+
     EarthEvent.prototype.destroy = function () {
         if (this.handler) this.handler.destroy()
         this.eventCache = {}
     }
 
-    EarthEvent.prototype.removeModule = function (eventType, module) {
-        if (eventType) {
-            module = module + "-" + eventType
-            delete this.eventCache[module]
-        } else {
-            let types = ["left", "right"]
-            types.map(type => {
-                let delModule = module + "-" + type
+
+    EarthEvent.prototype.removeEvent = function (eventType, module) {
+        if (module) {
+            let delModule
+            if (eventType) {
+                delModule = module +  eventType
+                if (eventType === EventType.preRender) {
+                    let listener = this.eventCache[delModule].listener
+                    this.earth.scene.preRender.removeEventListener(listener)
+                }
                 delete this.eventCache[delModule]
-            })
+            } else {
+                let types = Object.keys(EventType)
+                types.map(type => {
+                    delModule = module + type
+                    if (EventType[type] === EventType.preRender) {
+                        let listener = this.eventCache[delModule].listener
+                        this.earth.scene.preRender.removeEventListener(listener)
+                    }
+                    delete this.eventCache[delModule]
+                })
+            }
         }
     }
 

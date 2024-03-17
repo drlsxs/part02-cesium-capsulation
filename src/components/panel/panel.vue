@@ -4,8 +4,8 @@ import monitor from "@p/models/monitor.png"
 import { useEarth } from "@p/extends/cemap/use/useEarth.js";
 import Layer from '@p/extends/cemap/earth-engine/layer/layer.js'
 import Terrain from '@p/extends/cemap/earth-engine/layer/terrain.js'
-import { generatePosition, genLineStr } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
-import { onMounted } from 'vue'
+import { encodeId, generatePosition, genLineStr } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
+import { nextTick, onMounted, ref } from 'vue'
 import PointLayer from '@p/extends/cemap/earth-engine/base/point.js'
 import SimpleLayer from '@p/extends/cemap/earth-engine/base/simple.js'
 import LabelLayer from '@p/extends/cemap/earth-engine/base/label.js'
@@ -15,6 +15,7 @@ import EarthEvent from '@p/extends/cemap/earth-engine/event/earthEvent.js'
 import Assets from '@p/extends/cemap/earth-engine/config/assets/assetsIndex.js'
 import DrawUtils from '@p/extends/cemap/earth-engine/utils/drawUtils/drawUtils.js'
 import PolygonLayer from '@p/extends/cemap/earth-engine/geometry/Polygon.js'
+import EventType from '@p/extends/cemap/earth-engine/event/eventType.js'
 
 
 /**
@@ -46,8 +47,11 @@ let polyline
  *
  */
 let polygon
-
-let event, res, res2
+/**
+ * @type{EarthEvent}
+ */
+let event
+let res, res2
 
 onMounted(() => {
   bills = new BillboardLayer(useEarth(), true)
@@ -316,6 +320,40 @@ function delSimplePolygon() {
   polygon.removeAll()
 }
 
+let newpos = ref([])
+
+let newpos1 = ref([])
+function addhtmlLabel() {
+  let positio = generatePosition(120, 30, 2)
+  newpos.value = positio.map((item, index) => ({
+    id: "htmlId" + (index + 1),
+    position: item,
+  }))
+  event.preRenderHtml("aa", newpos.value)
+
+}
+
+function addhtmlLabel1() {
+  let positio = generatePosition(120, 30, 2)
+  newpos1.value = positio.map((item, index) => ({
+    id: "MyID" + (index + 1),
+    position: item,
+  }))
+
+  event.onPreRender("cc", newpos1.value, function (data) {
+    data.forEach(item => {
+      let domEl = document.getElementById(item.id)
+      domEl.style.left = item.screenPosition.x + "px"
+      domEl.style.top = item.screenPosition.y + "px"
+    })
+  })
+}
+
+function deletehtmlLabel() {
+  removeEvent(EventType.preRender, "aa")
+  newpos.value = []
+}
+
 function addleftEvent(data) {
   console.log(data, 0)
 
@@ -364,12 +402,26 @@ function addleftEvent1(data) {
     <button @click="deletpolyGon">删除面</button>
     <button @click="addSimplePolygon">普通面</button>
     <button @click="delSimplePolygon">移除普通面</button>
-
+    <button @click="addhtmlLabel">html标注</button>
+    <button @click="addhtmlLabel1">html标注</button>
+    <button @click="deletehtmlLabel">删除html标注</button>
     <br>
 
   </div>
+  <div v-for="(item,index) in newpos" :id="item.id" class="test-block">我是一个html标签{{ index+1 }}</div>
+  <div v-for="(item,index) in newpos1" :id="item.id" class="test-block">我是一个html标签{{ index+1 }}</div>
 </template>
 <style scoped>
+.test-block {
+  padding: 20px;
+  background: bisque;
+  color: dimgray;
+  width: 200px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.6;
+}
 .panel {
   h1 {
     color: white;

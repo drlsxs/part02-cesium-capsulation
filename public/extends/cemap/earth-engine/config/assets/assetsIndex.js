@@ -11,5 +11,6 @@ var Assets = (function (assets) {
     return assets
 })({})
 
+
 export default Assets
 
