@@ -1,4 +1,5 @@
 import initCamera from '@p/extends/cemap/earth-engine/utils/earthExtend/camera.js'
+// 执行材质添加代码
 import "@p/extends/cemap/earth-engine/material/materialIndex.js"
 
 /**

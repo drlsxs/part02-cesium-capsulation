@@ -3,15 +3,41 @@
  * @param lon 经度
  * @param lat 纬度
  * @param num 数量
+ * @param alt 高度
+ * @param space 间距
  * @returns {Cartesian3[]}
  */
-function generatePosition(lon, lat, num) {
+function genRandomPosition(lon, lat, num = 1, alt = 0, space = 1) {
     let list = []
     for (let i = 0; i < num; i++) {
-        let  lon1 = lon + Math.random() * 0.5
-        let  lat1 = lat + Math.random() * 0.5
-        list.push(new Cesium.Cartesian3.fromDegrees(lon1, lat1))
+        let lon1 = lon + Math.random() * space
+        let lat1 = lat + Math.random() * space
+        list.push(new Cesium.Cartesian3.fromDegrees(lon1, lat1, alt))
     }
+    return list
+}
+
+/**
+ * 生成随机位置 (面)
+ * @param lon 经度
+ * @param lat 纬度
+ * @param num 数量
+ * @param alt 高度
+ * @param space 间距
+ * @returns {Cartesian3[]}
+ */
+function genRandomPolyGon(lon, lat, num, alt, space) {
+    if (num < 3) {
+        console.warn("面最少需要三个点")
+        return []
+    }
+    let list = []
+    for (let i = 0; i < num; i++) {
+        let lon1 = lon + Math.random() * space
+        let lat1 = lat + Math.random() * space
+        list.push(new Cesium.Cartesian3.fromDegrees(lon1, lat1, alt))
+    }
+    list.push(list.at(0))
     return list
 }
 
@@ -133,12 +159,12 @@ function instanceManage(Fun,Id,single,instance) {
  * @return {Array<Cartesian3>}
  * @example
  * let lineStr = "123,23;135,28"
- * let lineArr =  genLineStr(lineStr)
+ * let lineArr =  genPositionStr(lineStr)
  * 返回 [Cartesian3,Cartesian3]
  *
  *
  */
-function genLineStr(linStr) {
+function genPositionStr(linStr) {
     /**
      * @type{Array}
      */
@@ -167,7 +193,7 @@ function genLineStr(linStr) {
  * @param alt
  * @return {Array<Cartesian3>}
  */
-function genLineList(data, lon = "lon", lat = "lat", alt = "alt") {
+function genPositionList(data, lon = "lon", lat = "lat", alt = "alt") {
     let list = []
     if (!data) return list
     data.map(item => {
@@ -181,40 +207,41 @@ function genLineList(data, lon = "lon", lat = "lat", alt = "alt") {
 }
 
 /**
- * 返回随机位置和颜色的线条，可设置固定高度，和经纬度范围
+ * 返回随机位置和颜色的直线，可设置固定高度，和经纬度范围
  * @param startLng{number}
  * @param startLat{number}
  * @param [height]{number}
- * @returns {{positions: Cartesian3[], colors: Color[]}}
+ * @param [num] {number}
+ * @returns {Array<Cartesian3>}
  */
-function genRandomLine(startLng, startLat, height) {
+function genStraightLine(startLng, startLat, height = 0, num = 2) {
 
     const positions = [];
     const colors = [];
 
-    for (let j = 0; j <= 50; j += 5) {
+    for (let j = 0; j <= num; j++) {
         positions.push(
-            Cesium.Cartesian3.fromDegrees(startLng + j, startLat, height === 0 ? height : height ? height : 50000.0 * (j % 10))
+            Cesium.Cartesian3.fromDegrees(startLng + j, startLat, height)
         );
-        colors.push(Cesium.Color.fromRandom({ alpha: 1.0 }));
     }
 
-    return { positions, colors }
+    return positions
 
 }
 
 
 export {
-    generatePosition,
+    genRandomPosition,
+    genRandomPolyGon,
     genUUid,
     encodeId,
     decodeId,
     getModule,
     Object_assign,
     instanceManage,
-    genLineStr,
-    genLineList,
-    genRandomLine
+    genPositionStr,
+    genPositionList,
+    genStraightLine,
 }
 
 

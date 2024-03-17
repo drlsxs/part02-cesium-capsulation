@@ -4,7 +4,12 @@ import monitor from "@p/models/monitor.png"
 import { useEarth } from "@p/extends/cemap/use/useEarth.js";
 import Layer from '@p/extends/cemap/earth-engine/layer/layer.js'
 import Terrain from '@p/extends/cemap/earth-engine/layer/terrain.js'
-import { encodeId, generatePosition, genLineStr } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
+import {
+  encodeId,
+  genRandomPosition,
+  genPositionStr,
+  genRandomPolyGon
+} from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 import { nextTick, onMounted, ref } from 'vue'
 import PointLayer from '@p/extends/cemap/earth-engine/base/point.js'
 import SimpleLayer from '@p/extends/cemap/earth-engine/base/simple.js'
@@ -16,6 +21,7 @@ import Assets from '@p/extends/cemap/earth-engine/config/assets/assetsIndex.js'
 import DrawUtils from '@p/extends/cemap/earth-engine/utils/drawUtils/drawUtils.js'
 import PolygonLayer from '@p/extends/cemap/earth-engine/geometry/Polygon.js'
 import EventType from '@p/extends/cemap/earth-engine/event/eventType.js'
+import WallLayer from '@p/extends/cemap/earth-engine/geometry/Wall.js'
 
 
 /**
@@ -51,6 +57,10 @@ let polygon
  * @type{EarthEvent}
  */
 let event
+/**
+ * @type{WallLayer}
+ */
+let wall
 let res, res2
 
 onMounted(() => {
@@ -61,6 +71,7 @@ onMounted(() => {
   polyline = new PolylineLayer(useEarth())
   polygon = new PolygonLayer(useEarth())
   event = new EarthEvent(useEarth())
+  wall = new WallLayer(useEarth())
   // event.onLeftClick("aa", addleftEvent1)
   // event.onLeftClick("default", addleftEvent)
   let layer = new Layer(useEarth())
@@ -78,12 +89,13 @@ function drawSimple() {
   let a = simple.addSimple({
     id: "111",
     color: Cesium.Color.RED,
-    image: plane2,
-    text: "Hello",
-    width: 50,
-    height: 50,
+    image: monitor,
+    text: "F-16",
+    width: 30,
+    height: 30,
     position: Cesium.Cartesian3.fromDegrees(120, 30),
-    font: "16px",
+    font: "12px",
+    fillColor: Cesium.Color.RED,
   })
 }
 
@@ -92,7 +104,7 @@ function remove() {
 }
 
 function addPointz() {
-  let pos = generatePosition(112, 33, 100)
+  let pos = genRandomPosition(112, 33, 100)
   pos.map(po => {
     point.addPoint({
       position: po,
@@ -124,7 +136,7 @@ function retext() {
 }
 
 function addPoint() {
-  let pos = generatePosition(108, 24, 1)
+  let pos = genRandomPosition(108, 24, 1)
   bills.addBillboard({
     id: "333",
     position: pos[0],
@@ -135,7 +147,7 @@ function addPoint() {
 }
 
 function addPoint1() {
-  let pos = generatePosition(120, 30, 6)
+  let pos = genRandomPosition(120, 30, 6)
   pos.map(po => {
     bills.addBillboard({
       position: po,
@@ -147,7 +159,7 @@ function addPoint1() {
 
   })
 
-  let pos1 = generatePosition(120, 30, 6)
+  let pos1 = genRandomPosition(120, 30, 6)
   pos1.map(po => {
     bills.addBillboard({
       position: po,
@@ -205,7 +217,7 @@ function reTerrain() {
 
 function addPolyline() {
 
-  let positions = genLineStr("120.328,24.000;105.443,24.000")
+  let positions = genPositionStr("120.328,24.000;105.443,24.000")
 
   polyline.addPolyline({
     positions: positions,
@@ -214,7 +226,7 @@ function addPolyline() {
 }
 
 function addPolyline1() {
-  let positions = genLineStr("120.328,26.000;105.443,26.000")
+  let positions = genPositionStr("120.328,26.000;105.443,26.000")
 
   polyline.addPolyline({
     positions: positions,
@@ -229,7 +241,7 @@ function addPolyline1() {
 
 function addPolyline2() {
 
-  let positions = genLineStr("120.328,28.000;105.443,28.000")
+  let positions = genPositionStr("120.328,28.000;105.443,28.000")
 
   polyline.addPolyline({
     positions: positions,
@@ -243,7 +255,7 @@ function addPolyline2() {
 }
 
 function addPolyline3() {
-  let positions = genLineStr("120.328,30.000;105.443,30.000")
+  let positions = genPositionStr("120.328,30.000;105.443,30.000")
   polyline.addPolyline({
     positions: positions,
     type: "PolylineArrow",
@@ -252,7 +264,7 @@ function addPolyline3() {
 }
 
 function addPolyline4() {
-  let positions = genLineStr("120.328,32.000;105.443,32.000")
+  let positions = genPositionStr("120.328,32.000;105.443,32.000")
   polyline.addPolyline({
     positions: positions,
     type: "PolylineDash",
@@ -262,7 +274,7 @@ function addPolyline4() {
 
 function addPolyline5() {
   polyline.addPolyline({
-    positions: genLineStr("107.3594,26.3970;107.4003,26.3970"),
+    positions: genPositionStr("107.3594,26.3970;107.4003,26.3970"),
     type: "PolylineTrail",
     width: 8,
     uniforms: {
@@ -310,7 +322,7 @@ function deletpolyGon() {
 
 function addSimplePolygon() {
   polygon.addPolygon({
-    positions: generatePosition(120, 30, 4),
+    positions: genRandomPolyGon(120, 30, 4, 0, 2),
     color: Cesium.Color.RED,
     opacity: 0.6,
   })
@@ -324,7 +336,7 @@ let newpos = ref([])
 
 let newpos1 = ref([])
 function addhtmlLabel() {
-  let positio = generatePosition(120, 30, 2)
+  let positio = genRandomPosition(120, 30, 2)
   newpos.value = positio.map((item, index) => ({
     id: "htmlId" + (index + 1),
     position: item,
@@ -333,24 +345,24 @@ function addhtmlLabel() {
 
 }
 
-function addhtmlLabel1() {
-  let positio = generatePosition(120, 30, 2)
-  newpos1.value = positio.map((item, index) => ({
-    id: "MyID" + (index + 1),
-    position: item,
-  }))
+function addDynamicWall() {
 
-  event.onPreRender("cc", newpos1.value, function (data) {
-    data.forEach(item => {
-      let domEl = document.getElementById(item.id)
-      domEl.style.left = item.screenPosition.x + "px"
-      domEl.style.top = item.screenPosition.y + "px"
-    })
+  wall.addWall({
+    positions: genRandomPolyGon(120, 30, 4, 10000, 2),
+    type: "DynamicWall",
+    color: Cesium.Color.AQUA,
   })
+  useEarth().cameraFlyTo(120, 30, 100000.0)
+
 }
 
+function delDynamicWall() {
+  wall.removeAll()
+}
+
+
 function deletehtmlLabel() {
-  removeEvent(EventType.preRender, "aa")
+  event.removeEvent(EventType.preRender, "aa")
   newpos.value = []
 }
 
@@ -403,8 +415,9 @@ function addleftEvent1(data) {
     <button @click="addSimplePolygon">普通面</button>
     <button @click="delSimplePolygon">移除普通面</button>
     <button @click="addhtmlLabel">html标注</button>
-    <button @click="addhtmlLabel1">html标注</button>
     <button @click="deletehtmlLabel">删除html标注</button>
+    <button @click="addDynamicWall">流动墙体</button>
+    <button @click="delDynamicWall">删除流动墙体</button>
     <br>
 
   </div>

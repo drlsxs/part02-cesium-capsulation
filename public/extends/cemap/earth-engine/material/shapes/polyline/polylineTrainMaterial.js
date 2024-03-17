@@ -7,9 +7,7 @@ var PolylineTrainMaterial = (function () {
         MaterialBase.call(this, options, PolylineTrainMaterial)
     }
 
-    PolylineTrainMaterial.type = MaterialType.PolylineTrail
-
-
+    PolylineTrainMaterial.type = MaterialType.DynamicWall
     return PolylineTrainMaterial
 
 

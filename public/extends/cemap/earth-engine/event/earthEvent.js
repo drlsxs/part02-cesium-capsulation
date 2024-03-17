@@ -140,16 +140,19 @@ var EarthEvent = (function () {
                     let position = lodash.cloneDeep(item.position)
                     if (position instanceof Cesium.Cartesian3) {
                         // 将笛卡尔坐标中的位置转换为canvas坐标。这通常用于将HTML元素放置在与场景中的对象相同的屏幕位置。
-                        position = _this.earth.scene.cartesianToCanvasCoordinates(position)
-                        item.screenPosition = position
+                        item.screenPosition = _this.earth.scene.cartesianToCanvasCoordinates(position)
                         let domEl = document.getElementById(item.id)
+                        // 判断元素是否在地球背面
                         if (domEl) {
+                            domEl.style.display = "block"
                             domEl.style.left = item.screenPosition.x + "px"
                             domEl.style.top = item.screenPosition.y + "px"
                         }
                     }
                 })
             }
+
+
             if (callback) callback.call(this, objectList)
         }
 
