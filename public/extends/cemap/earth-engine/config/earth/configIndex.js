@@ -25,6 +25,8 @@ var EarthConfig = (function () {
             linkId: "cemap",
             // 在地图上的目标移入显示手形鼠标
             showPointerAtTarget: true,
+            // 比例尺
+            showRuler: false,
             // =========================相机配置==================================
             defaultView: {
                 lon: 106,

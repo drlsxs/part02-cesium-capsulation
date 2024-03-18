@@ -1,6 +1,7 @@
 import { screenPositionTransform } from '@p/extends/cemap/earth-engine/utils/coordninate.js'
 import EventType from '@p/extends/cemap/earth-engine/event/eventType.js'
 import lodash from "lodash"
+import { useEarth } from '@p/extends/cemap/use/useEarth.js'
 
 var EarthEvent = (function () {
     /**
@@ -134,7 +135,7 @@ var EarthEvent = (function () {
 
     EarthEvent.prototype.preRenderHtml = function (modules, objectList, callback) {
         let _this = this
-        function listener() {
+        function upDateHtmlPos() {
             if (Array.isArray(objectList) && objectList.length) {
                 objectList.forEach(item => {
                     let position = lodash.cloneDeep(item.position)
@@ -155,8 +156,104 @@ var EarthEvent = (function () {
 
             if (callback) callback.call(this, objectList)
         }
+        this.onPreRender(modules, upDateHtmlPos)
+    }
 
-        this.onPreRender(modules, listener)
+    EarthEvent.prototype.preRenderRuler = function (modules, callback) {
+        let barWidth, distanceLabel
+        let _this = this
+        function cesiumScale() {
+            var geodesic = new Cesium.EllipsoidGeodesic();
+            var distances = [
+                1,
+                2,
+                3,
+                5,
+                10,
+                20,
+                30,
+                50,
+                100,
+                200,
+                300,
+                500,
+                1000,
+                2000,
+                3000,
+                5000,
+                10000,
+                20000,
+                30000,
+                50000,
+                100000,
+                200000,
+                300000,
+                500000,
+                1000000,
+                2000000,
+                3000000,
+                5000000,
+                10000000,
+                20000000,
+                30000000,
+                50000000
+            ];
+            // Find the distance between two pixels at the bottom center of the screen.
+            let scene = _this.earth.viewer.scene;
+            let width = scene.canvas.clientWidth;
+            let height = scene.canvas.clientHeight;
+
+            let left = scene.camera.getPickRay(
+                new Cesium.Cartesian2((width / 2) | 0, height - 1)
+            );
+            let right = scene.camera.getPickRay(
+                new Cesium.Cartesian2((1 + width / 2) | 0, height - 1)
+            );
+
+            let globe = scene.globe;
+            let leftPosition = globe.pick(left, scene);
+            let rightPosition = globe.pick(right, scene);
+            if (!Cesium.defined(leftPosition) || !Cesium.defined(rightPosition)) {
+                barWidth = undefined;
+                distanceLabel = undefined;
+                return;
+            }
+
+            let leftCartographic = globe.ellipsoid.cartesianToCartographic(
+                leftPosition
+            );
+            let rightCartographic = globe.ellipsoid.cartesianToCartographic(
+                rightPosition
+            );
+
+            geodesic.setEndPoints(leftCartographic, rightCartographic);
+            let pixelDistance = geodesic.surfaceDistance;
+
+            // Find the first distance that makes the scale bar less than 100 pixels
+
+            let maxBarWidth = 100;
+            let distance;
+            for (let i = distances.length - 1; !Cesium.defined(distance) && i >= 0; --i) {
+                if (distances[i] / pixelDistance < maxBarWidth) {
+                    distance = distances[i];
+                }
+            }
+
+            if (Cesium.defined(distance)) {
+                var label =
+                    distance >= 1000
+                        ? (distance / 1000).toString() + " km"
+                        : distance.toString() + " m"
+                barWidth = (distance / pixelDistance) | 0;
+                distanceLabel = label;
+            } else {
+                barWidth = undefined;
+                distanceLabel = undefined;
+            }
+
+            callback.call(this, barWidth, distanceLabel)
+        }
+        this.onPreRender(modules, cesiumScale)
     }
 
 
@@ -174,6 +271,8 @@ var EarthEvent = (function () {
                 if (eventType === EventType.preRender) {
                     let listener = this.eventCache[delModule].listener
                     this.earth.scene.preRender.removeEventListener(listener)
+                } else {
+                    this.handler.removeInputAction(eventType)
                 }
                 delete this.eventCache[delModule]
             } else {
@@ -183,6 +282,8 @@ var EarthEvent = (function () {
                     if (EventType[type] === EventType.preRender) {
                         let listener = this.eventCache[delModule].listener
                         this.earth.scene.preRender.removeEventListener(listener)
+                    } else {
+                        this.handler.removeInputAction(EventType[type])
                     }
                     delete this.eventCache[delModule]
                 })

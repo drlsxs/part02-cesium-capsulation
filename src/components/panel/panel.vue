@@ -360,6 +360,13 @@ function delDynamicWall() {
   wall.removeAll()
 }
 
+function addRuler() {
+  let earth = useEarth()
+  earth.options.showPointerAtTarget = false
+}
+
+
+
 
 function deletehtmlLabel() {
   event.removeEvent(EventType.preRender, "aa")
@@ -418,6 +425,7 @@ function addleftEvent1(data) {
     <button @click="deletehtmlLabel">删除html标注</button>
     <button @click="addDynamicWall">流动墙体</button>
     <button @click="delDynamicWall">删除流动墙体</button>
+    <button @click="addRuler">比例尺</button>
     <br>
 
   </div>

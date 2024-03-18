@@ -13,6 +13,7 @@ import { InitViewMode } from '@p/extends/cemap/earth-engine/config/earth/types.j
 import { Object_assign } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 import Assets from '@p/extends/cemap/earth-engine/config/assets/assetsIndex.js'
 import EarthEvent from '@p/extends/cemap/earth-engine/event/earthEvent.js'
+import EventType from '@p/extends/cemap/earth-engine/event/eventType.js'
 var Earth = (function () {
     /**
      * 地球构造器，初始化
@@ -21,25 +22,32 @@ var Earth = (function () {
      * @param options{EarthConfig} 参数
      */
     function Earth(id, options) {
-        // 视图
         this.viewer = void 0
         this.scene = void 0
         this.camera = void 0
         this.primitives = void 0
         this.id = id || "default";
         this.options = options;
-        this.widgetContainer = void 0
+        this.event = void 0
+        // 获取合并配置
+        this.mergeEarthOptions()
         // 初始化地图
         this.initEarth()
+        // 配置地球扩展方法
+        earthExtend.call(this)
         // 配置属性
-        configureProperties.call(this);
+        configureEarthProperties.call(this);
+        // 配置地球设置的参数
+        this.configEarthMergedOption()
+        // 监听地球配置改变
+        this.watchEarthOptions()
         // 将地球实例缓存
         Earth.instances[this.id] = this;
     }
 
     Earth.instances = {};
 
-    function configureProperties() {
+    function configureEarthProperties() {
         Object.defineProperties(this, {
             id: {
                 configurable: false,
@@ -48,31 +56,29 @@ var Earth = (function () {
         });
     }
 
+
     Earth.prototype.initEarth = function () {
-        // 获取合并配置
-        this.mergeOptions()
         this.viewer = new Viewer(this.options.el, this.options)
         this.scene = this.viewer.scene;
         this.camera = this.viewer.camera
         this.primitives = this.scene.primitives
-        // 初始化工具
-        earthExtend.call(this)
-        // 初始化地球参数
-        this.setEarthMergedOption()
+        this.event = new EarthEvent(this)
     }
 
-    Earth.prototype.mergeOptions = function () {
+    // 合并默认配置和自定义配置
+    Earth.prototype.mergeEarthOptions = function () {
         let defaultOptions = new EarthConfig()
         this.options = Object_assign(defaultOptions, this.options)
     }
 
-    Earth.prototype.setEarthMergedOption = function () {
-        this.setViewer()
-        this.setCamara()
-        this.setScene()
+    Earth.prototype.configEarthMergedOption = function () {
+        this.configViewer()
+        this.configCamara()
+        this.configScene()
+        this.toggleOption()
     }
 
-    Earth.prototype.setViewer = function () {
+    Earth.prototype.configViewer = function () {
         // 隐藏时钟元素
         if (this.options.animation) {
             /**
@@ -104,20 +110,10 @@ var Earth = (function () {
             cssLink.href = Assets.Css
             document.head.append(cssLink)
         }
-        // 在地图上的目标移入显示手形鼠标
-        if (this.options.showPointerAtTarget) {
-            let event = new EarthEvent(this)
-            event.onMouseMove("default", (data) => {
-                if (data.target) {
-                    document.body.style.cursor = "pointer"
-                } else {
-                    document.body.style.cursor = "initial"
-                }
-            })
-        }
+
     }
 
-    Earth.prototype.setCamara = function () {
+    Earth.prototype.configCamara = function () {
         // 相机配置
         let { defaultView, initViewMode } = this.options
         if (defaultView && defaultView.lon && defaultView.lat) {
@@ -131,12 +127,46 @@ var Earth = (function () {
         }
     }
 
-    Earth.prototype.setScene = function () {
+    Earth.prototype.configScene = function () {
+
+    }
+
+    // 支持切换的配置
+    Earth.prototype.toggleOption = function () {
+        // 在地图上的目标移入显示手形鼠标
+        if (this.options.showPointerAtTarget) {
+            this.event.onMouseMove("default", (data) => {
+                if (data.target) {
+                    document.body.style.cursor = "pointer"
+                } else {
+                    document.body.style.cursor = "initial"
+                }
+            })
+        } else {
+            this.event.removeEvent(EventType.mouseMove, "default")
+            document.body.style.cursor = "initial"
+        }
         // 地形检测
         this.scene.globe.depthTestAgainstTerrain = this.options.depthTestAgainstTerrain
         // 抗锯齿
         this.scene.postProcessStages.fxaa.enabled = this.options.fxaa;
     }
+
+    // proxy 检测配置属性改变
+    Earth.prototype.watchEarthOptions = function () {
+        let _this = this
+        this.options = new Proxy(this.options, {
+            set(target, p, newValue, receiver) {
+                // 先修改配置
+                target[p] = newValue
+                // 更新配置
+                _this.toggleOption()
+                // set返回假值（Falsy）, 使用Reflect来代替返回Falsy值，解决报错
+                return Reflect.set(target, p, newValue)
+            }
+        })
+    }
+
 
     /**
      * 获取地球实例

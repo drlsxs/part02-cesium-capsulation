@@ -24,7 +24,9 @@ export class EarthEvent {
 
     destroy(): void
 
-    onPreRender(modules: string, positions: Array<position>, callback: Function): void
+    onPreRender(modules: string, callback: Function): void
+
+    removeEvent(eventType: string | number, module: string): void
 
 
 

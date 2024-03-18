@@ -18,6 +18,7 @@ export interface EarthConfig {
     widgetClassName: string;
     linkId: string;
     showPointerAtTarget: boolean;
+    showRuler: boolean;
     // =========================相机配置==================================
     defaultView?: {
         lon?: number,
