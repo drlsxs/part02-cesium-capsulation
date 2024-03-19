@@ -15,6 +15,8 @@ export class Earth {
 
     event: EarthEvent;
 
+    widgetContainer: HTMLDivElement;
+
 
     // 参数
     options: EarthConfig;

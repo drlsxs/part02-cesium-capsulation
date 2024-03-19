@@ -6,7 +6,7 @@ var ToolTip = (function () {
      * @return ToolTip
      */
     function ToolTip(earth) {
-        this.container = earth.viewer.container.querySelector(`.${ earth.options.widgetClassName }`)
+        this.container = earth.widgetContainer
         this.message = ""
         this.tipName = "tool-tip"
         this.left = 0

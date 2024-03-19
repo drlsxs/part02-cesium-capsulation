@@ -1,5 +1,5 @@
 import { screenPositionTransform } from '@p/extends/cemap/earth-engine/utils/coordninate.js'
-import EventType from '@p/extends/cemap/earth-engine/event/eventType.js'
+import EventType, { SpaceEventType } from '@p/extends/cemap/earth-engine/event/eventType.js'
 import lodash from "lodash"
 import { useEarth } from '@p/extends/cemap/use/useEarth.js'
 
@@ -36,12 +36,14 @@ var EarthEvent = (function () {
                     }
                     if (!callback_event) {
                         // 不然使用传入模块的事件
-                        callback_event = this.eventCache[modules + EventType.leftClick]
+                        callback_event = this.eventCache[eventName]
                     }
                     callback_event.callback.call(this, transform)
                 }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
             } else {
-                console.warn("重复添加左键点击事件")
+                let cacheCallback = this.eventCache[eventName].callback
+                if (cacheCallback.toString() === callback.toString()) return
+                console.warn("重复添加左键点击事件" + modules)
             }
         } else {
             console.warn("模块不能为空")
@@ -69,12 +71,14 @@ var EarthEvent = (function () {
                     }
                     if (!callback_event) {
                         // 不然使用传入模块的事件
-                        callback_event = this.eventCache[modules + EventType.rightClick]
+                        callback_event = this.eventCache[eventName]
                     }
                     callback_event.callback.call(this, transform)
                 }, Cesium.ScreenSpaceEventType.RIGHT_CLICK)
             } else {
-                console.warn("重复添加右键点击事件")
+                let cacheCallback = this.eventCache[eventName].callback
+                if (cacheCallback.toString() === callback.toString()) return
+                console.warn("重复添加右键点击事件" + modules)
             }
         } else {
             console.warn("模块不能为空")
@@ -102,12 +106,14 @@ var EarthEvent = (function () {
                     }
                     if (!callback_event) {
                         // 不然使用传入模块的事件
-                        callback_event = this.eventCache[modules + EventType.mouseMove]
+                        callback_event = this.eventCache[eventName]
                     }
                     callback_event.callback.call(this, transform)
                 }, Cesium.ScreenSpaceEventType.MOUSE_MOVE)
             } else {
-                console.warn("重复添加鼠标移动事件")
+                let cacheCallback = this.eventCache[eventName].callback
+                if (cacheCallback.toString() === callback.toString()) return
+                console.warn("重复添加鼠标移动事件" + modules)
             }
         } else {
             console.warn("模块不能为空")
@@ -125,27 +131,28 @@ var EarthEvent = (function () {
                 }
                 this.earth.scene.preRender.addEventListener(listener)
             } else {
-                console.warn("重复添加场景更新渲染事件")
+                console.warn("重复添加场景更新渲染事件" + modules)
             }
         } else {
             console.warn("模块不能为空")
         }
     }
 
-
-    EarthEvent.prototype.preRenderHtml = function (modules, objectList, callback) {
+    EarthEvent.prototype.preRenderHtml = function (modules, objectList, lon = "lon", lat = "lat", callback) {
         let _this = this
         function upDateHtmlPos() {
             if (Array.isArray(objectList) && objectList.length) {
                 objectList.forEach(item => {
                     let position = lodash.cloneDeep(item.position)
+                    if (!position) {
+                        if (!item[lon] || !item[lat]) return
+                        position = Cesium.Cartesian3.fromDegrees(item[lon], item[lat])
+                    }
                     if (position instanceof Cesium.Cartesian3) {
                         // 将笛卡尔坐标中的位置转换为canvas坐标。这通常用于将HTML元素放置在与场景中的对象相同的屏幕位置。
                         item.screenPosition = _this.earth.scene.cartesianToCanvasCoordinates(position)
                         let domEl = document.getElementById(item.id)
-                        // 判断元素是否在地球背面
                         if (domEl) {
-                            domEl.style.display = "block"
                             domEl.style.left = item.screenPosition.x + "px"
                             domEl.style.top = item.screenPosition.y + "px"
                         }
@@ -153,9 +160,9 @@ var EarthEvent = (function () {
                 })
             }
 
-
             if (callback) callback.call(this, objectList)
         }
+
         this.onPreRender(modules, upDateHtmlPos)
     }
 
@@ -269,10 +276,10 @@ var EarthEvent = (function () {
             if (eventType) {
                 delModule = module +  eventType
                 if (eventType === EventType.preRender) {
-                    let listener = this.eventCache[delModule].listener
-                    this.earth.scene.preRender.removeEventListener(listener)
+                    let listener = this.eventCache[delModule]?.listener
+                    listener && this.earth.scene.preRender.removeEventListener(listener)
                 } else {
-                    this.handler.removeInputAction(eventType)
+                    this.handler.removeInputAction(SpaceEventType[eventType])
                 }
                 delete this.eventCache[delModule]
             } else {
@@ -280,10 +287,10 @@ var EarthEvent = (function () {
                 types.map(type => {
                     delModule = module + type
                     if (EventType[type] === EventType.preRender) {
-                        let listener = this.eventCache[delModule].listener
-                        this.earth.scene.preRender.removeEventListener(listener)
+                        let listener = this.eventCache[delModule]?.listener
+                        listener && this.earth.scene.preRender.removeEventListener(listener)
                     } else {
-                        this.handler.removeInputAction(EventType[type])
+                        this.handler.removeInputAction(SpaceEventType[eventType])
                     }
                     delete this.eventCache[delModule]
                 })

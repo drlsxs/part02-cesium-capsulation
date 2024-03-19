@@ -336,12 +336,11 @@ let newpos = ref([])
 
 let newpos1 = ref([])
 function addhtmlLabel() {
-  let positio = genRandomPosition(120, 30, 2)
-  newpos.value = positio.map((item, index) => ({
-    id: "htmlId" + (index + 1),
-    position: item,
-  }))
-  event.preRenderHtml("aa", newpos.value)
+  newpos.value = [
+      {id:"htmlBz1", jd: 120, wd: 30},
+      { id: "htmlBz2",jd:128, wd: 26},
+  ]
+  event.preRenderHtml("aa", newpos.value, "jd", "wd")
 
 }
 
@@ -362,7 +361,12 @@ function delDynamicWall() {
 
 function addRuler() {
   let earth = useEarth()
-  earth.options.showPointerAtTarget = false
+  earth.options.showRuler = true
+}
+
+function delRuler() {
+  let earth = useEarth()
+  earth.options.showRuler = false
 }
 
 
@@ -426,6 +430,7 @@ function addleftEvent1(data) {
     <button @click="addDynamicWall">流动墙体</button>
     <button @click="delDynamicWall">删除流动墙体</button>
     <button @click="addRuler">比例尺</button>
+    <button @click="delRuler">移除比例尺</button>
     <br>
 
   </div>

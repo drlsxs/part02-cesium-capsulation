@@ -1,10 +1,6 @@
 import {Earth} from "../earth/earth";
 import {Cartesian3, ScreenSpaceEventHandler} from "cesium";
 
-type position = {
-    id: string;
-    position: Cartesian3;
-}
 
 export class EarthEvent {
     earth: Earth;
@@ -27,6 +23,10 @@ export class EarthEvent {
     onPreRender(modules: string, callback: Function): void
 
     removeEvent(eventType: string | number, module: string): void
+
+    preRenderHtml(modules: string, objectList: Array<any>, lon: string, lat: string, callback: Function): void
+
+    preRenderRuler(modules: string, callback: Function): void
 
 
 

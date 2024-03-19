@@ -14,6 +14,7 @@ import { Object_assign } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 import Assets from '@p/extends/cemap/earth-engine/config/assets/assetsIndex.js'
 import EarthEvent from '@p/extends/cemap/earth-engine/event/earthEvent.js'
 import EventType from '@p/extends/cemap/earth-engine/event/eventType.js'
+import ScaleRuler from '@p/extends/cemap/earth-engine/earth/widgets/ruler.js'
 var Earth = (function () {
     /**
      * 地球构造器，初始化
@@ -29,6 +30,7 @@ var Earth = (function () {
         this.id = id || "default";
         this.options = options;
         this.event = void 0
+        this.widgetContainer = void 0
         // 获取合并配置
         this.mergeEarthOptions()
         // 初始化地图
@@ -101,6 +103,7 @@ var Earth = (function () {
         // 插入窗体容器
         let widgetContainer = `<div class='${ this.options.widgetClassName }'></div>`
         this.viewer.container.insertAdjacentHTML("beforeend", widgetContainer)
+        this.widgetContainer = this.viewer.container.querySelector(`.${ this.options.widgetClassName }`)
         // 引入css样式
         if (!document.getElementById(this.options.linkId)) {
             let cssLink = document.createElement("link")
@@ -146,6 +149,15 @@ var Earth = (function () {
             this.event.removeEvent(EventType.mouseMove, "default")
             document.body.style.cursor = "initial"
         }
+        // 比例尺
+        if (this.options.showRuler) {
+            if (this.widgetContainer) {
+                this.ruler = new ScaleRuler(this)
+            }
+        } else {
+            this.ruler && this.ruler.remove()
+        }
+
         // 地形检测
         this.scene.globe.depthTestAgainstTerrain = this.options.depthTestAgainstTerrain
         // 抗锯齿
