@@ -170,8 +170,4 @@ var Layer = (function () {
 
 })()
 
-
-
-
-
 export default Layer

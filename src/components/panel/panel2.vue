@@ -1,16 +1,18 @@
 <script setup>
-import { useEarth} from "@p/extends/cemap/useEarth/useEarth.js";
+import { useEarth} from "@p/extends/cemap/use/useEarth.js";
 import plane from "@p/models/plane.png"
+import BillboardLayer from '@p/extends/cemap/earth-engine/base/billboard.js'
+import { onMounted } from 'vue'
+
+let bills
+
+onMounted(() => {
+})
 
 
 // 画普通点
 const handlefly = () => {
-  // cameraFlyTo({
-  //   longitude: 116.39,
-  //   latitude: 39.9,
-  //   height: 1000000,
-  //   duration: 1
-  // })
+  useEarth("id2").cameraFlyTo(120, 30)
 }
 
 // 画普通点
@@ -19,7 +21,8 @@ const drawSimple = () => {
 }
 
 function remove() {
-  useEarth("id2").useBillboard.remove("111")
+  bills = new BillboardLayer(useEarth(), true)
+  bills.removeAll()
 }
 
 function addtext() {

@@ -12,6 +12,7 @@ export default defineConfig({
     optimizeDeps: {
         include: ['cesium'],
     },
+    base: "./",
     resolve: {
         alias: {
             // 将@指向src

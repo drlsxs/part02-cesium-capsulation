@@ -1,6 +1,12 @@
-import { encodeId } from '@p/extends/cemap/utils/utilIndex.js'
+import { encodeId } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 
 var PointLayer = (function () {
+
+    /**
+     *
+     * @param earth {Earth}
+     * @return PointLayer
+     */
     function PointLayer(earth) {
         this.points = earth.scene.primitives.add(new Cesium.PointPrimitiveCollection())
         this.caches = {}
@@ -37,8 +43,9 @@ var PointLayer = (function () {
         delete this.caches[id]
     }
 
-    PointLayer.prototype.removeAll = function (id) {
-
+    PointLayer.prototype.removeAll = function () {
+        this.points.removeAll()
+        this.caches = {}
     }
 
     return PointLayer

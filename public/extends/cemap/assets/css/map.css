@@ -1,0 +1,52 @@
+/**********************************提示************************************************/
+.widget.tool-tip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    min-width: 100px;
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+    padding: 0 10px;
+    background: rgba(0, 0, 0, .6);
+    border-radius: 4px;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: -1;
+}
+.widget.tool-tip:before {
+    content: "";
+    display: block;
+    position: absolute;
+    pointer-events: none;
+    left: -10px;
+    top: 5px;
+    border-top: 10px solid rgba(0, 0, 0, 0);
+    border-bottom: 10px solid rgba(0, 0, 0, 0);
+    border-right: 10px solid rgba(0, 0, 0, .6);
+}
+/**********************************比例尺************************************************/
+.widget.widget-scale-ruler {
+    position: absolute;
+    bottom: 10px;
+    left: 100px;
+    width: 120px;
+    height: 20px;
+}
+.widget-scale-ruler .scale-line {
+    position: absolute;
+    height: 10px;
+    top: 10px;
+    border-left: 1px solid #fff;
+    border-right: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+
+}
+.widget-scale-ruler .scale-label {
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+    font-weight: lighter;
+    width: 100%;
+}
+

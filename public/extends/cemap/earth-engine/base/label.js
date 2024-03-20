@@ -5,9 +5,7 @@
  * @version 1.0.0
  * @license IMT
  */
-import { encodeId } from '@p/extends/cemap/utils/utilIndex.js'
-
-const { Cartesian2 } = window.Cesium
+import { encodeId } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 
 var LabelLayer = (function () {
     function LabelLayer(earth) {
@@ -16,7 +14,6 @@ var LabelLayer = (function () {
     }
 
     LabelLayer.prototype.addLabel = function (_a) {
-
         let modules = _a.modules,
             id = encodeId(modules, _a.id),
             text = _a.text,
@@ -46,7 +43,6 @@ var LabelLayer = (function () {
         if (textPosition === "BOTTOM" && height) {
             pixelOffset = new Cesium.Cartesian2(0, height + 10)
         }
-
         label.pixelOffset = pixelOffset
         label = Object.assign(label, _advanceParams)
         label = this.labels.add(label)

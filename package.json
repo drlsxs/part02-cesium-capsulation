@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "cesium": "^1.114.0",
+    "lodash": "^4.17.21",
     "vite-plugin-cesium": "^1.2.22",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5"

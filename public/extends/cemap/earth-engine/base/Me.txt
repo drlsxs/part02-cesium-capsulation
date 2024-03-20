@@ -1,4 +1,4 @@
-矢量图层 primitive 集合 【primitiveCollection】
+矢量图层 primitive 集合 【xxxCollection】
 base 基础类
 billboard 广告牌
 label 标牌

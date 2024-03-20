@@ -1,20 +1,33 @@
 <script setup>
-import { cameraFlyTo, useEarth } from "@p/extends/cemap/useEarth/useEarth.js";
 import plane2 from "@p/models/plane2.png"
 import monitor from "@p/models/monitor.png"
+import { useEarth } from "@p/extends/cemap/use/useEarth.js";
 import Layer from '@p/extends/cemap/earth-engine/layer/layer.js'
 import Terrain from '@p/extends/cemap/earth-engine/layer/terrain.js'
-import { generatePosition } from '@p/extends/cemap/utils/utilIndex.js'
-import { onMounted } from 'vue'
-import PolylineLayer from '@p/extends/cemap/earth-engine/base/polyline.js'
+import {
+  encodeId,
+  genRandomPosition,
+  genPositionStr,
+  genRandomPolyGon
+} from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
+import { nextTick, onMounted, ref } from 'vue'
 import PointLayer from '@p/extends/cemap/earth-engine/base/point.js'
 import SimpleLayer from '@p/extends/cemap/earth-engine/base/simple.js'
 import LabelLayer from '@p/extends/cemap/earth-engine/base/label.js'
 import BillboardLayer from '@p/extends/cemap/earth-engine/base/billboard.js'
-import { genLineStr, genRandomLine } from '@p/extends/cemap/utils/line.js'
-import PolylineGeo from '@p/extends/cemap/earth-engine/geometry/PolylineGeo.js'
+import PolylineLayer from '@p/extends/cemap/earth-engine/geometry/Polyline.js'
 import EarthEvent from '@p/extends/cemap/earth-engine/event/earthEvent.js'
+import Assets from '@p/extends/cemap/earth-engine/config/assets/assetsIndex.js'
+import DrawUtils from '@p/extends/cemap/earth-engine/utils/drawUtils/drawUtils.js'
+import PolygonLayer from '@p/extends/cemap/earth-engine/geometry/Polygon.js'
+import EventType from '@p/extends/cemap/earth-engine/event/eventType.js'
+import WallLayer from '@p/extends/cemap/earth-engine/geometry/Wall.js'
 
+
+/**
+ * @type {DrawUtils}
+ */
+let drawUtil
 /**
  * @type{BillboardLayer}
  */
@@ -35,42 +48,54 @@ let point
  * @type{PolylineLayer}
  */
 let polyline
-
+/**
+ * @type {PolygonLayer}
+ *
+ */
+let polygon
 /**
  * @type{EarthEvent}
  */
 let event
-
+/**
+ * @type{WallLayer}
+ */
+let wall
+let res, res2
 
 onMounted(() => {
-  bills = new BillboardLayer(useEarth())
+  bills = new BillboardLayer(useEarth(), true)
   labels = new LabelLayer(useEarth())
   simple = new SimpleLayer(useEarth())
   point = new PointLayer(useEarth())
   polyline = new PolylineLayer(useEarth())
+  polygon = new PolygonLayer(useEarth())
   event = new EarthEvent(useEarth())
-  event.onClick("aa", addleftEvent1)
-  event.onClick("default", addleftEvent)
-
-
+  wall = new WallLayer(useEarth())
+  // event.onLeftClick("aa", addleftEvent1)
+  // event.onLeftClick("default", addleftEvent)
+  let layer = new Layer(useEarth())
+  layer.addTdtImgImgLayer()
+  drawUtil = new DrawUtils(useEarth(), true)
 })
 
 // 画普通点
 function handlefly() {
-  cameraFlyTo(116, 39)
+  useEarth().cameraFlyTo(116, 39)
 }
 
 // 画普通点
 function drawSimple() {
-  let a =  simple.addSimple({
+  let a = simple.addSimple({
     id: "111",
     color: Cesium.Color.RED,
-    image: plane2,
-    text: "Hello",
-    width: 50,
-    height: 50,
+    image: monitor,
+    text: "F-16",
+    width: 30,
+    height: 30,
     position: Cesium.Cartesian3.fromDegrees(120, 30),
-    font: "16px",
+    font: "12px",
+    fillColor: Cesium.Color.RED,
   })
 }
 
@@ -79,7 +104,7 @@ function remove() {
 }
 
 function addPointz() {
-  let pos = generatePosition(112, 33, 100)
+  let pos = genRandomPosition(112, 33, 100)
   pos.map(po => {
     point.addPoint({
       position: po,
@@ -92,7 +117,7 @@ function addPointz() {
 }
 
 function removePoint() {
-
+  point.removeAll()
 }
 
 function addtext() {
@@ -111,7 +136,7 @@ function retext() {
 }
 
 function addPoint() {
-  let pos = generatePosition(108, 24, 1)
+  let pos = genRandomPosition(108, 24, 1)
   bills.addBillboard({
     id: "333",
     position: pos[0],
@@ -121,11 +146,8 @@ function addPoint() {
   })
 }
 
-
-
 function addPoint1() {
-
-  let pos = generatePosition(120, 30, 6)
+  let pos = genRandomPosition(120, 30, 6)
   pos.map(po => {
     bills.addBillboard({
       position: po,
@@ -137,8 +159,7 @@ function addPoint1() {
 
   })
 
-
-  let pos1 = generatePosition(120, 30, 6)
+  let pos1 = genRandomPosition(120, 30, 6)
   pos1.map(po => {
     bills.addBillboard({
       position: po,
@@ -194,25 +215,21 @@ function reTerrain() {
   terrain.remove()
 }
 
-
 function addPolyline() {
 
-  const { positions } = genRandomLine(120, 17, 0)
+  let positions = genPositionStr("120.328,24.000;105.443,24.000")
 
   polyline.addPolyline({
     positions: positions,
-    width: 2,
     color: Cesium.Color.RED,
   })
 }
 
 function addPolyline1() {
-
-  const { positions } = genRandomLine(120, 20, 0)
+  let positions = genPositionStr("120.328,26.000;105.443,26.000")
 
   polyline.addPolyline({
     positions: positions,
-    width: 2,
     type: "PolylineGlow",
     color: Cesium.Color.CORNFLOWERBLUE,
     uniforms: {
@@ -224,11 +241,10 @@ function addPolyline1() {
 
 function addPolyline2() {
 
-  const { positions } = genRandomLine(120, 23, 200000)
+  let positions = genPositionStr("120.328,28.000;105.443,28.000")
 
   polyline.addPolyline({
     positions: positions,
-    width: 2,
     type: "PolylineOutline",
     color: Cesium.Color.ORANGE,
     uniforms: {
@@ -239,61 +255,140 @@ function addPolyline2() {
 }
 
 function addPolyline3() {
-
-  const { positions } = genRandomLine(120, 26, 200000)
-
+  let positions = genPositionStr("120.328,30.000;105.443,30.000")
   polyline.addPolyline({
     positions: positions,
-    width: 2,
     type: "PolylineArrow",
     color: Cesium.Color.PURPLE,
   })
 }
 
 function addPolyline4() {
-
-  const { positions } = genRandomLine(120, 29, 200000)
-
+  let positions = genPositionStr("120.328,32.000;105.443,32.000")
   polyline.addPolyline({
     positions: positions,
-    width: 2,
     type: "PolylineDash",
     color: Cesium.Color.CYAN,
   })
+}
+
+function addPolyline5() {
+  polyline.addPolyline({
+    positions: genPositionStr("107.3594,26.3970;107.4003,26.3970"),
+    type: "PolylineTrail",
+    width: 8,
+    uniforms: {
+      color: Cesium.Color.fromCssColorString("#00FFFF"),
+      speed: 3,
+      image: Assets.Image + "polylinematerial/LinkPulse.png",
+    },
+  })
+
 }
 
 function rePolyline() {
   polyline.removeAll()
 }
 
-function addPolylineGeo() {
-  /**
-   *
-   * @type {PolylineGeo}
-   */
-  let pyno = new PolylineGeo(useEarth())
-  let { positions, colors } = genRandomLine(120, 32)
-  pyno.addLine({
-    positions: positions,
-    colors: colors,
-    arcType: Cesium.ArcType.NONE,
-    colorsPerVertex: true,
+async function drawLine() {
+
+  res = await drawUtil.drawPolyLine({
+    color: Cesium.Color.GRAY,
+    width: 2,
+    showPoint: true,
+    pointColor: Cesium.Color.CYAN,
+    pointOutLineColor: Cesium.Color.WHITE,
+    pointOutLineWith: 1,
+  })
+
+}
+
+function deletLine() {
+  drawUtil.delete(res)
+}
+
+async function drawpolyGon() {
+  res2 = await drawUtil.drawPolyGon({
+    color: Cesium.Color.GRAY,
+    opacity: 0.8,
+  })
+  console.log(res2)
+
+}
+
+function deletpolyGon() {
+  drawUtil.delete(res2)
+}
+
+function addSimplePolygon() {
+  polygon.addPolygon({
+    positions: genRandomPolyGon(120, 30, 4, 0, 2),
+    color: Cesium.Color.RED,
+    opacity: 0.6,
   })
 }
 
+function delSimplePolygon() {
+  polygon.removeAll()
+}
+
+let newpos = ref([])
+
+let newpos1 = ref([])
+function addhtmlLabel() {
+  newpos.value = [
+      {id:"htmlBz1", jd: 120, wd: 30},
+      { id: "htmlBz2",jd:128, wd: 26},
+  ]
+  event.preRenderHtml("aa", newpos.value, "jd", "wd")
+
+}
+
+function addDynamicWall() {
+
+  wall.addWall({
+    positions: genRandomPolyGon(120, 30, 4, 10000, 2),
+    type: "DynamicWall",
+    color: Cesium.Color.AQUA,
+  })
+  useEarth().cameraFlyTo(120, 30, 100000.0)
+
+}
+
+function delDynamicWall() {
+  wall.removeAll()
+}
+
+function addRuler() {
+  let earth = useEarth()
+  earth.options.showRuler = true
+}
+
+function delRuler() {
+  let earth = useEarth()
+  earth.options.showRuler = false
+}
+
+
+
+
+function deletehtmlLabel() {
+  event.removeEvent(EventType.preRender, "aa")
+  newpos.value = []
+}
+
 function addleftEvent(data) {
-  console.log(data,0)
+  console.log(data, 0)
 
 }
+
 function addleftEvent1(data) {
-  console.log(data,1)
+  console.log(data, 1)
 
 }
-
 
 
 </script>
-
 <template>
   <div class="panel">
     <h1>Panel 1</h1>
@@ -322,15 +417,37 @@ function addleftEvent1(data) {
     <button @click="addPolyline2">轮廓线</button>
     <button @click="addPolyline3">箭头线</button>
     <button @click="addPolyline4">虚线</button>
+    <button @click="addPolyline5">轨迹线</button>
     <button @click="rePolyline">移除线条</button>
-    <button @click="addPolylineGeo">添加线图元</button>
-
+    <button @click="drawLine">绘制线</button>
+    <button @click="deletLine">删除绘制线</button>
+    <button @click="drawpolyGon">绘制面</button>
+    <button @click="deletpolyGon">删除面</button>
+    <button @click="addSimplePolygon">普通面</button>
+    <button @click="delSimplePolygon">移除普通面</button>
+    <button @click="addhtmlLabel">html标注</button>
+    <button @click="deletehtmlLabel">删除html标注</button>
+    <button @click="addDynamicWall">流动墙体</button>
+    <button @click="delDynamicWall">删除流动墙体</button>
+    <button @click="addRuler">比例尺</button>
+    <button @click="delRuler">移除比例尺</button>
     <br>
 
   </div>
+  <div v-for="(item,index) in newpos" :id="item.id" class="test-block">我是一个html标签{{ index+1 }}</div>
+  <div v-for="(item,index) in newpos1" :id="item.id" class="test-block">我是一个html标签{{ index+1 }}</div>
 </template>
-
 <style scoped>
+.test-block {
+  padding: 20px;
+  background: bisque;
+  color: dimgray;
+  width: 200px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.6;
+}
 .panel {
   h1 {
     color: white;
