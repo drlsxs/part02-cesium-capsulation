@@ -1,7 +1,6 @@
 import { screenPositionTransform } from '@p/extends/cemap/earth-engine/utils/coordninate.js'
 import EventType, { SpaceEventType } from '@p/extends/cemap/earth-engine/event/eventType.js'
 import lodash from "lodash"
-import { useEarth } from '@p/extends/cemap/use/useEarth.js'
 
 var EarthEvent = (function () {
     /**
@@ -263,12 +262,10 @@ var EarthEvent = (function () {
         this.onPreRender(modules, cesiumScale)
     }
 
-
     EarthEvent.prototype.destroy = function () {
         if (this.handler) this.handler.destroy()
         this.eventCache = {}
     }
-
 
     EarthEvent.prototype.removeEvent = function (eventType, module) {
         if (module) {

@@ -1,7 +1,7 @@
 import {EarthEvent} from "../../event/earthEvent";
 
 export class ScaleRuler {
-    widgetContainer: HTMLDivElement;
+    container: HTMLDivElement;
     barWidth: number;
     distanceLabel: string;
     rulerName: string;

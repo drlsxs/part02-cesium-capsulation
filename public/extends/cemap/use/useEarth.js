@@ -1,15 +1,16 @@
 import Earth from "@p/extends/cemap/earth-engine/earth/earth.js";
+import { Object_assign } from '@p/extends/cemap/earth-engine/utils/utilIndex.js'
 
 /**
  * 初始化地球实例
  * @returns {Earth}
  * @param [id] {String} 地球实例Id
- * @param [option] {EarthConfig} 初始化参数
+ * @param [options] {EarthConfig} 初始化参数
  */
-function useEarth(id, option) {
+function useEarth(id, options = {}) {
     let earth = Earth.getInstance(id);
     if (earth) return earth;
-    earth = new Earth(id, option);
+    earth = new Earth(id, options);
     return earth;
 }
 

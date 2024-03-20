@@ -21,6 +21,7 @@ var Earth = (function () {
      * @constructor
      * @param id{String} id
      * @param options{EarthConfig} 参数
+     * @return Earth
      */
     function Earth(id, options) {
         this.viewer = void 0
@@ -77,7 +78,7 @@ var Earth = (function () {
         this.configViewer()
         this.configCamara()
         this.configScene()
-        this.toggleOption()
+        this._toggleOption()
     }
 
     Earth.prototype.configViewer = function () {
@@ -135,33 +136,44 @@ var Earth = (function () {
     }
 
     // 支持切换的配置
-    Earth.prototype.toggleOption = function () {
-        // 在地图上的目标移入显示手形鼠标
-        if (this.options.showPointerAtTarget) {
-            this.event.onMouseMove("default", (data) => {
-                if (data.target) {
-                    document.body.style.cursor = "pointer"
-                } else {
-                    document.body.style.cursor = "initial"
-                }
-            })
-        } else {
-            this.event.removeEvent(EventType.mouseMove, "default")
-            document.body.style.cursor = "initial"
-        }
-        // 比例尺
-        if (this.options.showRuler) {
-            if (this.widgetContainer) {
-                this.ruler = new ScaleRuler(this)
+    Earth.prototype._toggleOption = function (key) {
+
+        if (key === "showPointerAtTarget"||!key) {
+            // 在地图上的目标移入显示手形鼠标
+            if (this.options.showPointerAtTarget) {
+                this.event.onMouseMove("default", (data) => {
+                    if (data.target) {
+                        document.body.style.cursor = "pointer"
+                    } else {
+                        document.body.style.cursor = "initial"
+                    }
+                })
+            } else {
+                this.event.removeEvent(EventType.mouseMove, "default")
+                document.body.style.cursor = "initial"
             }
-        } else {
-            this.ruler && this.ruler.remove()
+        }
+        if (key === "showRuler"||!key) {
+            // 比例尺
+            if (this.options.showRuler) {
+                if (this.widgetContainer) {
+                    this.ruler = new ScaleRuler(this)
+                }
+            } else {
+                this.ruler && this.ruler.remove()
+                this.ruler = null
+            }
         }
 
-        // 地形检测
-        this.scene.globe.depthTestAgainstTerrain = this.options.depthTestAgainstTerrain
-        // 抗锯齿
-        this.scene.postProcessStages.fxaa.enabled = this.options.fxaa;
+        if (key === "depthTestAgainstTerrain"||!key) {
+            // 地形检测
+            this.scene.globe.depthTestAgainstTerrain = this.options.depthTestAgainstTerrain
+        }
+
+        if (key === "fxaa"||!key) {
+            // 抗锯齿
+            this.scene.postProcessStages.fxaa.enabled = this.options.fxaa;
+        }
     }
 
     // proxy 检测配置属性改变
@@ -172,7 +184,7 @@ var Earth = (function () {
                 // 先修改配置
                 target[p] = newValue
                 // 更新配置
-                _this.toggleOption()
+                _this._toggleOption(p)
                 // set返回假值（Falsy）, 使用Reflect来代替返回Falsy值，解决报错
                 return Reflect.set(target, p, newValue)
             }
